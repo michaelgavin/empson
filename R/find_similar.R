@@ -74,7 +74,8 @@ find_similar = function(mat, keyword, method = "para", sorted = T, exclude = T) 
   if (method == "sig") {
     if (keyword %in% colnames(mat) == F) {
       print("Observed signature not available for selected keyword. Estimating signature based on similar words.")
-      words = names(sort(mat[keyword,], decreasing = T)[1:3])
+      words = find_similar(mat, keyword, method = "para")
+      words = names(words[1:3])
       vec = apply(mat[,words],1,mean)
       results = vec[-which(names(vec) %in% words)]
     } else {
