@@ -7,11 +7,11 @@ Author: person("Michael","Gavin", email = "mgavin@mailbox.sc.edu", role =
     c("aut", "cre"))
 Maintainer: Michael Gavin <michael.a.gavin@gmail.com>
 Description: Create and analyze matrices of text data
-Imports:
+Suggests: 
     tei2r
 License: CC0 (http://bit.ly/1F96Zgp)
 LazyData: TRUE
-Collate:
+Collate: 
     'buildMatrix.R'
     'compare_matrices.R'
     'docMatrix.R'
@@ -25,3 +25,4 @@ Collate:
     'nlaw.R'
     'zscore.R'
 VignetteBuilder: knitr
+Suggests: knitr

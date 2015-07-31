@@ -64,15 +64,17 @@ data(eebo)
 find_analogies(mat = eebo, positive = c("liberties", "veins"), negative = "arteries")
 
 # 'red':'yellow' captures something really interesting (not sure what)
-# about 'prejudice' and its relation to rights/liberties/privileges
+# about 'prejudice' and its relation to the color 'red'.
 find_analogies(mat = eebo, positive = c("rights", "yellow"), negative = "red")
 find_analogies(mat = eebo, positive = c("liberties", "yellow"), negative = "red")
 find_analogies(mat = eebo, positive = c("privileges", "yellow"), negative = "red")
 
 # contrast to 'yellow':'red'
 find_analogies(mat = eebo, positive = c("rights", "red"), negative = "yellow")
-find_analogies(mat = eebo, positive = c("liberties", "red"), negative = "yellow")
-find_analogies(mat = eebo, positive = c("privileges", "red"), negative = "yellow")
+
+# It has trouble specifying relations among commonly co-occuring words
+find_analogies(mat = eebo, positive = c("tree", "city"), negative = "street")
+find_analogies(mat = eebo, positive = c("tree", "street"), negative = "city")
 
 # 'husband':'wife' for antonyms
 find_analogies(mat = eebo, positive = c("heaven", "wife"), negative = "husband")
