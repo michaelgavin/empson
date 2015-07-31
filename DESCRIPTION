@@ -25,4 +25,3 @@ Collate:
     'nlaw.R'
     'zscore.R'
 VignetteBuilder: knitr
-Suggests: knitr
