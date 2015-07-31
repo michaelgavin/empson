@@ -8,8 +8,8 @@
 #' @author Author:
 #' Michael Gavin
 #' 
-#' @section What it does:
-#' Add info here.
+#' @section Tutorial:
+#' To get started with \code{empson}, follow the tutorial at \code{\link{Tutorial: empson}}.
 #' 
 #' \strong{Basic operations:}
 #' \itemize{

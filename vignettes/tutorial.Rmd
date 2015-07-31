@@ -16,7 +16,7 @@ The package includes a sample dataset, `eebo`, drawn from the EEBO-TCP corpus, u
 
 This tutorial covers the following topics:
 
-- Installing `empson` (and, optionally, `tei2r`)
+- Installing `empson` and `tei2r`
 - Sample datasets
 - Similarity measures: `find_similar()`
 - Graphing concepts: `graph_context()`
@@ -36,7 +36,7 @@ devtools::install_github("michaelgavin/tei2r")
 devtools::install_github("michaelgavin/empson", build_vignettes = T)
 ```
 
-Because `empson` and `tei2r` both include significantly large datasets, the download and installation may take a minute or two. Once installed, add to your library:
+**You must install `tei2r` in order to run `empson`.** Because `empson` includes significantly large datasets, the download and installation may take two or three minutes. Once installed, add to your library:
 
 ```{r}
 library(tei2r)
@@ -135,15 +135,11 @@ graph_context(mat = eebo, keyword = "succession", use = "all")
 
 This function finds analogies by entering word vectors into a simple proportional equation. For example, the analogy 'king':'queen'::'man':'woman' can be represented as 
 
-\begin{center}
-V('king') / V('queen') ~= V('man') / V('woman')*
-\end{center}
+    V('king') / V('queen') ~= V('man') / V('woman')
 
 Of course, with vector-space models these equations are never exact, so what you're looking for is not a precise equivalence, but a vector of candidates that might best fill the analogy. If we re-state the above formula as *A/B = C/D*, then given three word vectors { A, B, and C } we should be able to guess the best candidates for D. The equation *A/B = C/D* can be converted to 
 
-\begin{center}
-*C x B / A = D*
-\end{center}
+    C x B / A = D
 
 When using the `find_analogies` function to seek out analogies in this way, enter your search term in this (reverse) order: 
 

@@ -9,9 +9,9 @@
 The \code{empson} package builds on \code{tei2r} to create matrix
 representations of document collections.
 }
-\section{What it does}{
+\section{Tutorial}{
 
-Add info here.
+To get started with \code{empson}, follow the \code{\link{tutorial}}
 
 \strong{Basic operations:}
 \itemize{
