@@ -15,7 +15,7 @@ patterns.
 \describe{
 \item{\code{mat1}}{A word-context matrix}
 
-\item{\code{mat2}}{A word-context matric}
+\item{\code{mat2}}{A word-context matrix}
 
 \item{\code{output}}{A string (either "mat" or "vec".) If "mat", function will return
              a matrix (mat1 - mat2), made up of the shared rows and shared

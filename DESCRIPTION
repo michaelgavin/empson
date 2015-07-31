@@ -17,11 +17,11 @@ Collate:
     'docMatrix.R'
     'eebo.R'
     'empson.R'
+    'find_analogies.R'
     'find_change.R'
     'find_similar.R'
     'graph_context.R'
     'locke.R'
     'nlaw.R'
-    'word_algebra.R'
     'zscore.R'
 VignetteBuilder: knitr

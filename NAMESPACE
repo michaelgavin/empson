@@ -2,8 +2,8 @@
 
 export(buildMatrix)
 export(compare_matrices)
+export(find_analogies)
 export(find_similar)
 export(graph_context)
-export(word_algebra)
 export(zscore)
 import(tei2r)
