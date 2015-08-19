@@ -73,7 +73,7 @@ If we examine the passage from which the first two instances of **wit** are draw
 
 *Should onely rule, who most resembles me:*
 
-After calculating the centroid of terms that appear around 'wit' here, the resulting vector is most similar to *humane, corrupt, corporeal, operations, divine, sensitive, corruption, rational*. 
+After adding the vectors of terms that appear around 'wit' here, the resulting vector is most similar to *humane, corrupt, corporeal, operations, divine, sensitive, corruption, rational*. 
 
   *Sh— alone of all my Sons, is he*
 
@@ -91,7 +91,7 @@ After calculating the centroid of terms that appear around 'wit' here, the resul
 
 *His rising Fogs prevail upon the Day:*
 
-After calculating the centroid of terms that appear around 'wit' here, the resulting vector is most similar to *bodies, asleep, pass, veins, sensitive, run, saw, heard*. As in the first use, `empson` finds, rightly or wrongly, a powerful discourse of the body underneath Dryden's invocation of 'wit'. 
+After adding the vectors of terms that appear around 'wit' here, the resulting vector is most similar to *bodies, asleep, pass, veins, sensitive, run, saw, heard*. As in the first use, `empson` finds, rightly or wrongly, a powerful discourse of the body underneath Dryden's invocation of 'wit'. 
 
 However (and this, I think, is potentially very interesting), using multiplication rather than addition returns very different results, especially for the first instance.
 
