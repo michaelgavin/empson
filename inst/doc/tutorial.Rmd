@@ -1,0 +1,210 @@
+---
+title: "Tutorial: empson"
+author: "Michael Gavin"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Tutorial: empson}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+## Introduction:
+
+This tutorial will walk you through the basics of using the `empson` R package. The `empson` package builds on the basic functionality of `tei2r` to convert TEI-encoded and plain-text documents into word vectors. `empson` converts `tei2r` objects into vector-space models (word-count matrices). The `tei2r` and `empson` packages can build a variety of vector-space model types, but in this initial development version, the analysis functions are all designed to work with a specific data format: the word-context matrix. 
+
+The package includes a sample dataset, `eebo`, drawn from the EEBO-TCP corpus, using all texts published between 1640 and 1699. This tutorial will use the `eebo` model as its test case. Two other sample models: `nlaw` and `locke` are smaller and will perform the same calculations more quickly.
+
+This tutorial covers the following topics:
+
+- Installing `empson` and `tei2r`
+- Sample datasets
+- Similarity measures: `find_similar()`
+- Graphing concepts: `graph_context()`
+- Analogies and Basic Semantic Relations: `find_analogies()`
+- Change over time: `find_change()`
+- Building your own matrix: `buildMatrix()`
+
+(NOTE: This tutorial assumes that you are using RStudio, which comes preloaded with the `devtools` package.)
+
+## Installing `empson` and `tei2r`:
+
+Install `tei2r` and `empson` directly from Github, using the following commands:
+
+```r
+# Install empson and tei2r from github
+devtools::install_github("michaelgavin/tei2r")
+devtools::install_github("michaelgavin/empson", build_vignettes = T)
+```
+
+**You must install `tei2r` in order to run `empson`.** Because `empson` includes significantly large datasets, the download and installation may take two or three minutes. Once installed, add to your library:
+
+```{r}
+library(tei2r)
+library(empson)
+```
+
+Check out the help pages for `empson` and browse through a few of the functions to get a sense of the help files:
+
+```r
+?empson
+```
+
+Because `empson` is still in development, there may be glitches. The dependencies of the two packages may cause problems: `tei2r` requires the `XML` package and suggests `mallet`. If you have any installation hiccups, please email me right away.
+
+## Sample datasets: eebo, nlaw, locke
+
+Load the sample datasets:
+
+```{r}
+data(eebo)
+data(nlaw)
+data(locke)
+```
+
+Let's focus on `eebo`. Explore the data by checking the dimensions:
+
+```r
+dim(eebo)
+```
+
+You can just look it over by running:
+
+```r
+View(eebo[1:50, 1:50])
+```
+
+`eebo` is a word-context matrix. This means that the columns are all **words** and the rows are **contexts**. Each of the column words was used as a keyword search for keyword-in-context analysis. The data in each column is the result of the search, showing the frequency that each context word appeared during the search. The distribution of frequency counts for a given word is that word's **signature**. So, for example:
+
+```r
+eebo[,'succession'] # Returns the signature of 'succession'
+
+# To see the most frequent context words:
+tail(sort(eebo[,'succession']))
+```
+
+By putting the signatures of each word together in a big matrix, it becomes possible to compare and contrast the signatures of different words.
+
+## Similarity measures: `find_similar()`
+
+The core of `empson`'s capabilities can be found in the `find_similar()` function. Begin by playing around with it a bit. Try the following: 
+
+```r
+find_similar(eebo, "succession")
+```
+
+That used the default setting, which is `method = 'para'`. Now try it by specifying `method = 'sig'`:
+
+```r
+find_similar(eebo, "succession", method = "sig")
+```
+
+You'll notice very different results. Lastly try this:
+
+```r
+find_similar(eebo, "succession", method = "syn")
+```
+
+Each of these three search techniques performs a different kind of calculation to measure a different form of *attributional similarity* (see Turney and Pantel, 2010, p. 149-50).
+
+The simplest is the middle one: `method = 'sig'`. This returns the **signature** of the term, so for *succession* you get its most common context words: *church, right, crown, time, king, bishops*.
+
+The default is `method = 'para'`. This returns a score that models **paradigmatic similarity**: that is, the similarity of the signatures of two words. If words tend to appear near words like *church, right, crown, time, king, bishops* in a proportion similar to that of *succession*, they'll have a high paradigmatic similarity. Unsurprisingly, you get words like *hereditary, ordination, descent, crown, succeed, pastors, derived, election*.
+
+Lastly, **syntagmatic similarity**, called using `method = 'syn'`, measures how commonly words appear *as context words* around the same keywords. This similarity tends to emphasize lower-frequency words that are specialized to the same contexts in which your keyword is deployed. Unsurprisingly, for *succesion* it returns words like *uninterrupted, lineall, interrupted, lineal, proximity, interruption*.
+
+Each of these measures involves a fairly simple calculation. For the signature, it simply returns the value of the column.^[Not all words have columns. For those that don't, it estimates the signature based on the signatures of paradicmatically similar words.] For paradigmatic similarity, it compares across the columns using a simple Pearson correlation. In R, it's the function `cor`. For syntagmatic similarity, it runs a Pearson correlation over the rows.
+
+Because in a word-context matrix there are many more rows than columns, `empson` uses a mathematical trick to estimate the signatures of terms that weren't among the original KWICs. Basically, `empson` takes the z-score of the word's row, showing which of the columns are most significant. Then, it transposes the resulting vector into a ghost column, and runs the Pearson correlation over the columns. *Essentially,* `find_similar(method = 'para')` *finds the columns that most closely correlate to the z-scores of a given row.* This is how `empson` gets paradigmatic similarity for all the context words.
+
+The easiest way to get a sense of these different relationships is just to play around with `find_similar()` using different parameters. The `eebo` matrix is quite large, so it takes a few seconds to run each time. If you prefer, use the `nlaw` matrix. It's pulled from my little collection of 33 17th century texts related to political theory: it includes Locke, Filmer, Milton, Hobbes, Grotius, Pufendorf, etc. It's interesting to see how political concepts appear in this matrix, but keep in mind that the resulting vectors represent the uses of the words in this very specific context, not over the 17th century more broadly, which the bigger but therefore slower `eebo` matrix captures much more completely.
+
+
+## Graphing concepts: `graph_context()`
+
+What I like best in `empson` are the dendrograms. These are built by running `find_similar` and then performing a very simple word-sense disambiguation operation. Basically, it finds the thirty most similar words then performs a simple little clustering algorithm to see which context words group where in relation to each other. You can use any of the similarity measures with the `use` parameter. If you select `use = 'all'` you'll get a graph that takes the top ten words using each measure then maps them together.
+
+I'm sure there are ways to better specify the kinds of conceptual relationships that these graphs suggest. I have been considering network graphs, for example, or some kind of modified Voronoi diagram. But these simple dendrograms seem ripe for interpretation.
+
+```{r, fig.show = 'hold', fig.width = 6.5, fig.align = 'center', fig.height = 6.5}
+graph_context(mat = eebo, keyword = "succession", use = "all")
+```
+
+***********
+
+## Analogies and Basic Semantic Relations: `find_analogies()`
+
+This function finds analogies by entering word vectors into a simple proportional equation. For example, the analogy 'king':'queen'::'man':'woman' can be represented as 
+
+    V('king') / V('queen') ~= V('man') / V('woman')
+
+Of course, with vector-space models these equations are never exact, so what you're looking for is not a precise equivalence, but a vector of candidates that might best fill the analogy. If we re-state the above formula as *A/B = C/D*, then given three word vectors { A, B, and C } we should be able to guess the best candidates for D. The equation *A/B = C/D* can be converted to 
+
+    C x B / A = D
+
+When using the `find_analogies` function to seek out analogies in this way, enter your search term in this (reverse) order: 
+
+```r
+find_analogies(mat = eebo, positive = c("man","queen"), negative = "king")
+```
+ 
+**Notice that you must enter your 'A' term as the 'negative' parameter.**
+
+This returns "woman" as the first result. If you reverse the terms, such that you're looking for the analogy man:woman::king:?, enter it this way:
+
+```r
+find_analogies(mat = eebo, positive = c("king","woman"), negative = "man")
+```
+
+This returns some queens' names, and "queen" is the fourth result.
+
+Results are similar when using addition and subtraction, but I have found results to be sharper using multiplication, and the representation of analogies as fractions makes more intuitive sense as an analogy for analogy, at least to me.
+
+However, it's really not super precise. It struggles with analytical thinking, like part-whole relationships, and even with 28,000 words, the vocabulary is pretty limited. But I've been thinking about how to use this, perhaps by finding some canonical relationships. Look over some of the examples I provide in the help page: 
+
+```r
+?find_analogies
+```
+
+*********
+
+## Change over time: `find_change()`
+
+This function does not work with the regular matrices. But if you're working with the .RData files for each individual term, you can trace concept drift. (I posted a ton of these to Google Drive. They're labeled like "right.RData", "rightful.RData", "rights.RData", etc.) It outputs a little scatterplot showing how the meaning has drifted, using 1640 to 1649 as a base. Most words don't change much. The arc for 'succession' is pretty interesting.
+
+```r
+# You have to set the working directory to the folder
+setwd("/folder/with/rdata/files")
+find_change(keyword = "succession")
+```
+
+When `empson` moves into a public release, I probably won't include this function. I can think of some ways to improve it, though, if *change over time* really does turn out to be the focus of our first paper.
+
+**********
+
+## Builing your own matrix: `buildMatrix()`
+
+Here's the thing: building your own small matrix is pretty easy, but matrices need to be really big in order to get robust results from a computational linguistics perspective. However, this function is really good if you want to create a sample set (the works of Defoe, say) to see how the word relationships differ in the local context, compared to the whole. I have begun playing around a bit with functions that compare and contrast matrices, but none of that is ready yet.
+
+To build your own matrix (of, say, everything published in 1689), use `tei2r` to import the texts:
+
+```r
+library(tei2r)
+setwd("/your/chosen/directory")
+results = tcpSearch(range = 1689, 
+                    field = "Date", 
+                    write = T) # creates "index.csv" from results of TCP search
+tcpDownload(results)
+dl = buildDocList(directory = "/your/chosen/directory", 
+                  stopwordsFile = "/path/to/your/stopwords.txt", 
+                  indexFile = "index.csv")
+dt = importTexts(dl)
+```
+
+Then use `empson` to create a matrix:
+
+```r
+dm = buildMatrix(dt, type = "wordContext")
+dm = buildMatrix(dt, type = "documentTerm")
+```
+
+Thanks for reading through this tutorial. I hope `empson` works.

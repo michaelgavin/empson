@@ -30,6 +30,7 @@
 #' find_change("rights")
 #' find_change("rights", base = 1640:1688, extent = 1689:1699)
 #' find_change("rights", chart = F)
+#' @export
 find_change = function(keyword, base = 1640:1649, extent = 1650:1699, chart = T) {
   filename = paste(keyword, ".RData", sep="")
   if (filename %in% dir() == F) {

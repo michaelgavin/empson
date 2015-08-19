@@ -11,7 +11,7 @@ representations of document collections.
 }
 \section{Tutorial}{
 
-To get started with \code{empson}, follow the \code{\link{tutorial}}
+To get started with \code{empson}, follow the tutorial at \code{\link{Tutorial: empson}}.
 
 \strong{Basic operations:}
 \itemize{

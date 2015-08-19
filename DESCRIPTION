@@ -18,6 +18,7 @@ Collate:
     'eebo.R'
     'empson.R'
     'find_analogies.R'
+    'find_centroid.R'
     'find_change.R'
     'find_similar.R'
     'graph_context.R'
