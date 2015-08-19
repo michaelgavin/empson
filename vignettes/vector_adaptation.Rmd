@@ -1,0 +1,109 @@
+---
+title: "‘Wit’ in MacFlecknoe using Vector Adaptation"
+author: "Michael Gavin"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Tutorial: empson}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+Here is the code I used to analyze 'wit' in *MacFlecknoe*. It is an application of `find_analogies` based on the method described by Katrin Erk (2012, p. 641-43), using vector addition and/or multiplication to merge all the context words for each instance of a keyword. The resulting vector can then be compared to the total matrix to find the most similar terms for each usage. Erk generally recommends multiplication rather than addition, and I think both are useful, though multiplication is definitely sharper.
+
+Before getting started, it's worth looking at this passage from Empson's *Seven Types of Ambiguity*, in which he lays out a vision of language that is strikingly similar to vector-space representation:
+
+> The English prepositions, for example, from being used in so many ways and in combination with so many verbs, have acquired not so much a number of meanings as a body of meaning continuous in several dimensions; a tool-like quality, at once thin, easy to the hand, and weighty, which mere statement of their variety does not convey. In a sense all words have a body of this sort; none can be reduced to a finite number of points, and if they could the points could not be conveyed by words. (5)
+
+What he means by 'could not be conveyed by words', I think, is 'could not be restated in prose'. The purpose of vector-space models, it seems to me, is precisely to convey meaning as an array of points, arranged in an impossible-to-conceive number of dimensions.
+
+Here's how to get started. If you run the following code on your own machines, keep in mind that it will write a directory, `macflecknoe` into whatever is your starting working directory.
+
+```{r}
+library(tei2r)
+library(empson)
+data(eebo)
+dir.create(paste(getwd(), "/macflecknoe", sep=""))
+mac_dir = paste(getwd(), "/macflecknoe", sep="")
+setwd(mac_dir)
+results = tcpSearch(term = "MacFlecknoe", field = "Title", write = T)
+tcpDownload(results)
+dl = buildDocList(directory = getwd(), indexFile = "index.csv")
+```
+
+Once the `tei2r` docList has been created, you can use it to create the analytical objects you're interested in.
+
+```{r}
+dt = importTexts(dl)
+wit = buildConcordance(dt = dt, keyword = "wit", context = 5)
+wit@concordance
+```
+
+Now let's find the sum or product for each item in the KWICS list. Once we find the sum or product, we can display the words most similar to the resulting vectors.
+
+```{r}
+results = list()
+for (i in 1:length(wit@concordance[[1]])) {
+  words = unlist(wit@concordance[[1]][i])
+  words = words[which(words %in% rownames(eebo) == T)]
+  results[[i]] = vector_adaptation(mat = eebo, positive = words, operation = "+")
+}
+results
+```
+
+Like `find_analogies`, `vector_adaptation` returns by default the words most similiar to the combined vector, excluding words used to compose the vector. (The most similar terms are usually the terms in the 'positive' argument. By excluding them, we find the words that exist in the orbit of their common space.)
+
+Notice that the first two feature words like *humane, corrupt, sensitive, bodies, veins, saw, heard*, seeming to emphasize in many possible ways embodied cognition and the mind's corrupted state when compared to the divine. The fourth is just a list of king's names (suggesting an almost perfect alignment with the discourse of kingship), while the fifth suggests an ambiguous tension between evaluating beauty and resolving a court case, a tension that, perhaps, recurs over the other uses. Such summative label-statements, however, barely scratch the surface of the connections the algorithm is finding.
+
+If we examine the passage from which the first two instances of **wit** are drawn, we see a perhaps surprising disjunction between the apparent meanings and the results of the centroid analysis.
+
+  *This aged Prince now flourishing in Peace,*
+  *And blest with issue of a large increase.*
+  *Worn out with business, did at length debate*
+  *To settle the Succession of the State:*
+  *And pond'ring which of all his Sons was fit*
+  *To Reign, and wage immortal War with **Wit**:*
+  *Cry'd, 'tis resolv'd; for Nature pleads that He*
+  *Should onely rule, who most resembles me:*
+
+After calculating the centroid of terms that appear around 'wit' here, the resulting vector is most similar to *humane, corrupt, corporeal, operations, divine, sensitive, corruption, rational*. 
+
+  *Sh— alone of all my Sons, is he*
+  *Who stands confirm'd in full stupidity.*
+  *The rest to some faint meaning make pretence,*
+  *But Sh— never deviates into sense.*
+  *Some Beams of **Wit** on other souls may fall,*
+  *Strike through and make a lucid intervall;*
+  *But Sh—'s genuine night admits no ray,*
+  *His rising Fogs prevail upon the Day:*
+
+After calculating the centroid of terms that appear around 'wit' here, the resulting vector is most similar to *bodies, asleep, pass, veins, sensitive, run, saw, heard*. As in the first use, `empson` finds, rightly or wrongly, a powerful discourse of the body underneath Dryden's invocation of 'wit'. 
+
+However (and this, I think, is potentially very interesting), using multiplication rather than addition returns very different results, especially for the first instance.
+
+```{r}
+results = list()
+for (i in 1:length(wit@concordance[[1]])) {
+  words = unlist(wit@concordance[[1]][i])
+  words = words[which(words %in% rownames(eebo) == T)]
+  results[[i]] = vector_adaptation(mat = eebo, positive = words, operation = "*")
+}
+results
+```
+
+To see how these uses of 'wit' fit within the discursive framework of 'wit' in the `eebo` matrix, compare these results to its dendrograms.
+
+```{r, echo=FALSE}
+graph_context(mat = eebo,keyword = 'wit', use='syn')
+graph_context(mat = eebo,keyword = 'wit', use='para')
+```
+
+Much more could be said, of course, and one focus of the paper could be close-reading the passages using the centroid results as a guide. The centroids perform what's called *word-sense discrimination*; that is, they automatically identify difference in use, but they do not apply labels to the senses they identify. *Word-sense disambiguation* attaches meaning labels to the differentiated uses, usually through reference to dictionaries or some outside sources.
+
+Though he sometimes made use of dictionaries, especially in *Structure of Complex Words*, Empson relied primarily on his own judgment to attach labels to the various meanings he believed to be embedded in words. In *Seven Types of Ambiguity*, Empson describes his interpretive method this way:
+
+> I propose then to consider a series of definite and detachable ambiguities, in which several large and crude meanings can be separated out, and to arrange them in order of increasing distance from simple statement to logical exposition. (7)
+
+Following this basic technique, word-sense discrimination intervenes in the first stage of Empson's interpretive process. Rather than merely discriminate the senses using subjective critical judgment and converting those sentences to prose 'statements', vector analysis identifies the multiple pathways through which each use of a key term relates outward to the corpus as a whole.
+
+For this reason, computational analysis does not forestall or supplant human interpretation, nor does it supplement it. Rather, *word-sense discrimination organizes interpretive possibilities* in a way that is more theoretically rigorous and more regularized (and thus more open to poetry's vast possibilities).

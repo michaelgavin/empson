@@ -38,8 +38,8 @@ vector_adaptation = function (mat, positive = NULL, result = "analogies", operat
     }
     if (operation == "+") {
       vec = apply(mat[vec, ], 2, sum)
+      #vec = vec / length(vec) To switch back to 'centroid' function
     }
-    #vec = vec / length(vec)
   }
   else {
     vec = mat[positive, ]

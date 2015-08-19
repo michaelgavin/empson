@@ -24,5 +24,6 @@ Collate:
     'graph_context.R'
     'locke.R'
     'nlaw.R'
+    'vector_adaptation.R'
     'zscore.R'
 VignetteBuilder: knitr
