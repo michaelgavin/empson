@@ -16,7 +16,6 @@
 #' 
 #' @examples
 #' data(eebo)
-#' # 'arteries':'veins' for words that exist together in a common category
 #' find_centroid(mat = eebo, positive = c("wit", "sense"))
 #' 
 #' @export
