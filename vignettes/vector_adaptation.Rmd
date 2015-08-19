@@ -57,25 +57,39 @@ Notice that the first two feature words like *humane, corrupt, sensitive, bodies
 
 If we examine the passage from which the first two instances of **wit** are drawn, we see a perhaps surprising disjunction between the apparent meanings and the results of the centroid analysis.
 
-  *This aged Prince now flourishing in Peace,*
-  *And blest with issue of a large increase.*
-  *Worn out with business, did at length debate*
-  *To settle the Succession of the State:*
-  *And pond'ring which of all his Sons was fit*
-  *To Reign, and wage immortal War with **Wit**:*
-  *Cry'd, 'tis resolv'd; for Nature pleads that He*
-  *Should onely rule, who most resembles me:*
+*This aged Prince now flourishing in Peace,*
+
+*And blest with issue of a large increase.*
+
+*Worn out with business, did at length debate*
+
+*To settle the Succession of the State:*
+
+*And pond'ring which of all his Sons was fit*
+
+*To Reign, and wage immortal War with **Wit**:*
+
+*Cry'd, 'tis resolv'd; for Nature pleads that He*
+
+*Should onely rule, who most resembles me:*
 
 After calculating the centroid of terms that appear around 'wit' here, the resulting vector is most similar to *humane, corrupt, corporeal, operations, divine, sensitive, corruption, rational*. 
 
   *Sh— alone of all my Sons, is he*
-  *Who stands confirm'd in full stupidity.*
-  *The rest to some faint meaning make pretence,*
-  *But Sh— never deviates into sense.*
-  *Some Beams of **Wit** on other souls may fall,*
-  *Strike through and make a lucid intervall;*
-  *But Sh—'s genuine night admits no ray,*
-  *His rising Fogs prevail upon the Day:*
+
+*Who stands confirm'd in full stupidity.*
+
+*The rest to some faint meaning make pretence,*
+
+*But Sh— never deviates into sense.*
+
+*Some Beams of **Wit** on other souls may fall,*
+
+*Strike through and make a lucid intervall;*
+
+*But Sh—'s genuine night admits no ray,*
+
+*His rising Fogs prevail upon the Day:*
 
 After calculating the centroid of terms that appear around 'wit' here, the resulting vector is most similar to *bodies, asleep, pass, veins, sensitive, run, saw, heard*. As in the first use, `empson` finds, rightly or wrongly, a powerful discourse of the body underneath Dryden's invocation of 'wit'. 
 
@@ -91,14 +105,21 @@ for (i in 1:length(wit@concordance[[1]])) {
 results
 ```
 
-To see how these uses of 'wit' fit within the discursive framework of 'wit' in the `eebo` matrix, compare these results to its dendrograms.
+To see how these uses of 'wit' fit within the discursive framework of 'wit' in the `eebo` matrix, compare these results to its dendrograms. First, **syntagmatic similarity**:
 
 ```{r, echo=FALSE}
 graph_context(mat = eebo,keyword = 'wit', use='syn')
+```
+
+And here, **paradigmatic similarity**:
+
+```{r, echo=FALSE}
 graph_context(mat = eebo,keyword = 'wit', use='para')
 ```
 
-Much more could be said, of course, and one focus of the paper could be close-reading the passages using the centroid results as a guide. The centroids perform what's called *word-sense discrimination*; that is, they automatically identify difference in use, but they do not apply labels to the senses they identify. *Word-sense disambiguation* attaches meaning labels to the differentiated uses, usually through reference to dictionaries or some outside sources.
+Much more could be said, of course, and one focus of the paper could be close-reading the passages using the vector-adaptation and dendrogram results as a guide. You can see how each use of the term 'wit' in *MacFlecknoe* moves in and out of the possibilities sketched out in the dendrograms while simultaneously pointing in new directions.
+
+Vector adaptation performs what's called *word-sense discrimination*; that is, they automatically identify difference in use, but they do not apply labels to the senses they identify. *Word-sense disambiguation* attaches meaning labels to the differentiated uses, usually through reference to dictionaries or some outside sources.
 
 Though he sometimes made use of dictionaries, especially in *Structure of Complex Words*, Empson relied primarily on his own judgment to attach labels to the various meanings he believed to be embedded in words. In *Seven Types of Ambiguity*, Empson describes his interpretive method this way:
 
