@@ -107,13 +107,13 @@ results
 
 To see how these uses of 'wit' fit within the discursive framework of 'wit' in the `eebo` matrix, compare these results to its dendrograms. First, **syntagmatic similarity**:
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, fig.show = 'hold', fig.width = 6.5, fig.align = 'center', fig.height = 6.5}
 graph_context(mat = eebo,keyword = 'wit', use='syn')
 ```
 
 And here, **paradigmatic similarity**:
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, fig.show = 'hold', fig.width = 6.5, fig.align = 'center', fig.height = 6.5}
 graph_context(mat = eebo,keyword = 'wit', use='para')
 ```
 
