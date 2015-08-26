@@ -2,11 +2,7 @@
 title: "‘Wit’ in MacFlecknoe using Vector Adaptation"
 author: "Michael Gavin"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{Tutorial: empson}
-  %\VignetteEngine{knitr::rmarkdown}
-  \usepackage[utf8]{inputenc}
+output: html_document
 ---
 
 Here is the code I used to analyze 'wit' in *MacFlecknoe*. It is an application of `find_analogies` based on the method described by Katrin Erk (2012, p. 641-43), using vector addition and/or multiplication to merge all the context words for each instance of a keyword. The resulting vector can then be compared to the total matrix to find the most similar terms for each usage. Erk generally recommends multiplication rather than addition, and I think both are useful, though multiplication is definitely sharper.
@@ -24,8 +20,7 @@ library(tei2r)
 library(empson)
 data(eebo)
 dir.create(paste(getwd(), "/macflecknoe", sep=""))
-mac_dir = paste(getwd(), "/macflecknoe", sep="")
-setwd(mac_dir)
+setwd("macflecknoe")
 results = tcpSearch(term = "MacFlecknoe", field = "Title", write = T)
 tcpDownload(results)
 dl = buildDocList(directory = getwd(), indexFile = "index.csv")
