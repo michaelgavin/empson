@@ -3,7 +3,7 @@
 #' Combines word vectors using either addition or component-wise multiplication
 #' then returns the 20 most similar terms.
 #' 
-#' @slot mat A word-context matrix (format either matrix or \code{docMatrix}).
+#' @param mat A word-context matrix (format either matrix or \code{docMatrix}).
 #' 
 #' @param positive A character vector of terms naming the rows to be computed.
 #' 
