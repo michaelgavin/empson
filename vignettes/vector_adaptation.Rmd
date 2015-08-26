@@ -55,7 +55,7 @@ Like `find_analogies`, `vector_adaptation` returns by default the words most sim
 
 Notice that the first two feature words like *humane, corrupt, sensitive, bodies, veins, saw, heard*, seeming to emphasize in many possible ways embodied cognition and the mind's corrupted state when compared to the divine. The fourth is just a list of king's names (suggesting an almost perfect alignment with the discourse of kingship), while the fifth suggests an ambiguous tension between evaluating beauty and resolving a court case, a tension that, perhaps, recurs over the other uses. Such summative label-statements, however, barely scratch the surface of the connections the algorithm is finding.
 
-If we examine the passage from which the first two instances of **wit** are drawn, we see a perhaps surprising disjunction between the apparent meanings and the results of the centroid analysis.
+If we examine the passage from which the first two instances of **wit** are drawn, we see a perhaps surprising disjunction between the apparent meanings and the results of the vector-adaptation analysis.
 
 *This aged Prince now flourishing in Peace,*
 
@@ -107,13 +107,13 @@ results
 
 To see how these uses of 'wit' fit within the discursive framework of 'wit' in the `eebo` matrix, compare these results to its dendrograms. First, **syntagmatic similarity**:
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, fig.show = 'hold', fig.width = 6.5, fig.align = 'center', fig.height = 6.5}
 graph_context(mat = eebo,keyword = 'wit', use='syn')
 ```
 
 And here, **paradigmatic similarity**:
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, fig.show = 'hold', fig.width = 6.5, fig.align = 'center', fig.height = 6.5}
 graph_context(mat = eebo,keyword = 'wit', use='para')
 ```
 
