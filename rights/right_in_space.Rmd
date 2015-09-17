@@ -182,6 +182,8 @@ What's more striking to me, though, is how commensurable the assumptions of vect
 
 Anyway, vector-space models are very cool. If you're using R or Python to build concordances using keywords-in-context, try throwing the results into a matrix. Existing textbooks geared to digital humanists won't tell you how to do it, but it's actually pretty easy. If you want to use my dataset and my functions, you can get them [here](https://github.com/michaelgavin/empson).
 
+### Notes
+
 [^1]: The word-context matrix differs from its more familiar cousin, the *document-term matrix*. In a document-term matrix, the columns are documents and the rows are the words. These are the two most common kinds of vector-space models. For a more complete discussion, see Turney and Pantel (2010).
 
 [^2]: A few words about the selection process for the 1,751 keywords. I began by choosing several very different terms and took the thousand most-frequent words that appeared near each: combined into a single vector, the result was 1,751 unique words. They provided a very comprehensive cross section of seventeenth-century discourse.
