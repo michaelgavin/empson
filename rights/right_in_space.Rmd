@@ -1,0 +1,202 @@
+---
+title: "The Arithmetic of Concepts: A Response to Peter de Bolla"
+author: "Michael Gavin"
+date: "September 14, 2015"
+output: html_document
+---
+
+Last year I wrote a review of Peter de Bolla's extraordinary book, [*The Architecture of Concepts: the Historical Formation of Human Rights*](http://fordhampress.com/index.php/the-architecture-of-concepts-paperback.html) (Fordham, 2013). I called it "the best argument yet for large-scale quantitative reading." Relying entirely on keyword searches entered by hand through a web interface (*Eighteenth-Century Collections Online*), de Bolla shows that the conceptual structure of "rights" shifted over the eighteenth century. Whereas earlier in the period rights co-occurred with terms like "church," "parliament," and "bishops," over time rights were more commonly paired with words like "man," "equal," and "sacred." This turnover in rights' lexical neighborhood signifies, for de Bolla, a transformation in the concept itself: from a way of thinking about the liberties and privileges of institutions like the clergy and the legislature, "rights" promised to serve axiomatically as the general condition of all people. (If you'd like to read the full review, forthcoming in *Eighteenth Century: Theory and Interpretation*, I've posted the manuscript [here]("ecti review.pdf").)
+
+*Architecture of Concepts* unfolds a highly sophisticated and deeply theoretical argument, but its methods are idiosyncratic and *ad hoc*. My review concludes:
+
+> Without polemicizing, *Architecture of Concepts* lays out a theory of conceptuality that has the potential to upend large-scale quantitative research. If concepts exist culturally as lexical networks rather than as expressions contained in individual texts, the whole debate between distant and close reading needs reframing. Conceptual history should be traceable using techniques like lexical mapping and supervised probabilistic topic modeling. I wish de Bolla had taken the time to learn about and discuss these procedures, even if only to explain the advantages of his more hands-on technique. Instead he writes, “I have every expectation that future scholars will ... have access to deeper computational search protocols that will develop this new way of thinking concepts in history. If this book prompts that, it will have done its work splendidly” (10).
+
+Since he wrote this book, de Bolla has spear-headed the [Concept Lab](http://www.crassh.cam.ac.uk/programmes/cambridge-centre-for-digital-knowledge) at Cambridge, where he leads an interdisciplinary group of scholars devoted to precisely this project: developing a more sophisticated and rigorously theorized suite of quantitative methods for intellectual history. Since writing my review, I've had a chance play around with conceptual modeling as well, and I wrote this essay to be a companion piece to the print review. Here I describe my attempts to follow through on the computational side of the problem: I'll provide a brief introduction to vector-based semantics, and I'll sketch out a method of computationally-assisted close reading. My dataset is the EEBO-TCP corpus, against which I compare 18 uses of the word `rights` that appear in John Locke's *Two treatises of government* (1690).
+
+### What is semantic space?
+
+When de Bolla identifies words that tend to co-occur with "rights", he's building a *vector-space model*, though he doesn't use the term. A 'vector' is any distribution of word counts. Usually, researchers will create vectors by gathering the word frequencies in documents: Jane Austen's *Emma* uses different words from *Mansfield Park*, for example, and these differences might tell you something about the novels. But you can also use this method to create a portrait of a keyword: words that appear in the context of "trigonometry" will be very different from words that appear around "lettuce." Just like word counts can sometimes tell you something interesting about books, word co-occurences can tell you something interesting about concepts.
+
+Whereas de Bolla looks at just one keyword, it's more conventional in corpus linguistics to place vectors in a larger matrix, known sometimes as a *word-context matrix*.[^1] In a word-context matrix, the columns are keywords and the rows are the context-terms that appear around each keyword. Such matrices are called vector-*space* models because the mathematical operations used to compare and contrast their values are mostly borrowed from geometry: Within the multi-dimensional space of a word-context matrix, which other terms cluster most closely around "rights"? (More about this below.)
+
+To ask this question is already to skip an important step in the analysis, however. The biggest mistake I made in my initial attempts to build on de Bolla's work was to share his assumption that interpreting a word-vector was like reading a word cloud. A good way to compare and contrast concepts, I thought, was to compare and contrast lists of their collocates. What hadn't occurred to me is that these vectors are actually mathematical objects available for computation. I don't need to look at a list of words that appear around "rights" in the 1720s and visually contrast it from a list of words that appear around "rights" in the 1790s -- I can calculate the difference between them by simply, well, calculating the difference. I can take a vector of word counts called `rights_1720` and subtract a vector of word counts called `rights_1790` from it. What's left would be a vector that tells me something distinctly 1720s-ish about rights discourse.
+
+**This is the fundamental conceit of vector-based semantics: 1) that words are defined by the distribution of the vocabulary of their contexts, and 2) that these distributions can be compared mathematically.** Despite its decades-long pedigree in computational linguistics, and despite the prevalence of recent discussion around computational methods, I don't think this conceit has really permeated the humanities as a field. We've mostly danced around it while arguing over how to interpret topics models and word clouds. But the idea is radical, profound, and very, very weird. If we accept the basic premise that words can be represented as vectors, then words themselves -- not just word *counts* -- can be added and subtracted, multiplied and divided. In vector space, words aren't just countable, they are each others' countable parts.
+
+One way to visualize the arithmetic of concepts is to imagine a Venn diagram. Taking two different but related words from the EEBO corpus, like `power` and `right`, we can imagine that their vectors would share a lot in common. Both might be bound up in contexts of talk around religion and politics, but they also diverge in some key ways. Here's a Venn diagram showing the top twenty words that appear in `right` and `power`: 
+
+![Right vs. power Venn diagram][image1]
+
+By showing the conceptual region where `right` and `power` overlap, this diagram also hints at what happens when you abstract power-ness from right-ness or vice versa. What's left in `right` when you take all the `power` words out?
+
+The problem with a Venn diagram, though, is that it treats all context words as binary values. (Something either is or isn't in the top twenty words, and the diagram is built with simple set operations, a form of mathematics unencumbered by arithmetic.) Looking more closely at the underlying data provides a more detailed and more interesting picture. The vectors used to generate that chart were drawn from the EEBO-TCP corpus. Taking all documents in that collection from the years 1640 through 1699, one can measure the frequency of context words and then compute over those frequencies.
+
+context | right | power | right - power | right * power
+--------|-------|-------|---------------|--------------
+right   | .1076 | .0021 | .1055         | .0002259
+hand    | .0126 | .0013 | .0113         | .0000016
+god     | .0094 | .0151 | -.0057        | .0001419
+left    | .0053 | .0006 | .0047         | .0000032
+man     | .0049 | .0049 | .0000         | .0000240
+lord    | .0043 | .0029 | .0014         | .0000125
+king    | .0042 | .0048 | .0006         | .0000202
+way     | .0041 | .0014 | .0026         | .0000057
+power   | .0036 | .1081 | -.1045        | .0003892
+christ  | .0034 | .0053 | -.0019        | .0000180
+...     |       |       |               |
+side    | .0023 | .0003 | .0020         | .0000007
+wrong   | .0021 | .0001 | .0020         | .0000002
+line    | .0019 | .0001 | .0018         | .0000002
+angle   | .0010 | .0000 | .0010         | .0000000
+angles  | .0010 | .0000 | .0010         | .0000000
+
+When `power` is abstracted from `right`, a number of context words generally important to `right` are removed: 'god', 'man', 'power' and 'christ' are all subtracted away. At the same time, terms unique to `right` are unaffected. These are positional words like 'left', 'side', and 'wrong', as well as terms peculiar to geometry, like 'line', 'angle', and 'angles', which are not especially important to `right` but which all become top terms in the imaginary vector, `right - power`.
+
+Subtraction is, I think, the easiest to grasp, but really any mathematical operation can be performed over word vectors. Multiplication is commonly used, because it returns the intersecting points of the Venn diagram: only words common to both sides survive multiplication. As you can see above, when `right` and `power` are multiplied, only the words they share ('power', 'right', and 'god') remain in significant proportion.
+
+Division is extremely interesting, although it requires a little massaging of the data to avoid dividing by zero. Division returns words in one vector that are nearly absent from the other. The results are usually unexpected and often bizarre. `mind` divided by `soul`, for example, returns a very clearly demarcated discourse of seventeenth-century European statecraft. (I haven't investigated to see which documents are responsible for this odd result, but it wouldn't be hard to find out.) 
+
+Operations like these can be used to tease out the different contexts in which a word is used, a process sometimes called *word-sense disambiguation*. For example, taking `law` or `angle` from `right` clearly separates out their respective discursive contexts. Taking both out highlights `right`'s appearance across a variety discussions, mostly having to do with medicine, sea travel, and war. Here are just the top six words from each vector:
+
+right / law | right / angle | right / (law * angle)
+------------|---------------|----------------------
+angle       | law           | greet
+angled      | government    | files
+triangle    | honourable    | trenches
+angles      | justice       | armagh
+files       | christ        | spermatick
+spherical   | princes       | fibres
+
+It's perhaps surprising -- at least, it was surprising to me -- how conceptually coherent these resulting vectors usually are, even if they often still blend a variety of contexts or contain idiosyncratic 'noise'. I said above that I was mistaken to interpret word vectors like static objects, but you can see that these results look a lot like topic models. Reading them is very much like reading a word cloud, except the goal isn't to tease apart the different themes in a book, but to tease apart something like the different senses of a word. Or, as de Bolla might put it, to map out a word's affiliations across a networked architecture of concepts.
+
+Playing with word-vector arithmetic is like being a child playing with a calculator for the first time, feeling affirmed when the machine knows that `7 - 3 = 4` and being amazed that `98 / 7 = 14` without understanding why. 
+
+As an area of research in computational linguistics, word-sense disambiguation has a long history, going back to early attempts at machine translation. Essays in the 1950s by Zelig Harris (1951) and J. R. Firth (1957) laid much of the theoretical groundwork, as did Ludwig Wittgenstein and his student, Margaret Masterman, who became a pioneer in computational linguistics and founded the Cambridge Language Research Unit in 1953. (The CLRU was closed in 1986 after Masterman's death. As far as I know, there's no institutional memory that connects the new Concept Lab at Cambridge to its twentieth-century predecessor.) For a review of this history, see Ide and Veronis (1998), which appeared as the introduction to a special issue of *Computational Linguistics*. An essay in that collection, "Automatic Word Sense Discimination" by Hinrich Schutze, is highly cited, offering one of the first, algorithmically based, bottom-up approaches to word-sense disambiguation. Useful and important essays by Karov and Edelman and by Towell and Voorhees appear in the same volume. More recently, Turney (2006) has laid out a sophisticated theory of similarity in vector-space. He and Pantel (2010) provide a comprehensive review of vector-based semantics through 2010 -- their essay should be the first source for anybody looking to get a more detailed overview of the field than I can provide here. Erk (2012) and Clark (2014) cover similar ground, but with a slightly more technical focus.
+
+### Concept space: placing vectors into a matrix
+
+As fascinating as individual word-vector calculations are, they don't allow for systematic comparison across a corpus. For that, you need to put the vectors into a matrix with shared rows. Instead of just producing a new vector of context words and interpreting the results like a topic model, you can measure how similar words are to each other, and you can find out which existing words are most similar to the pseudo-words returned by vector arithmetic.
+
+In what follows, I'll describe five methods of statistical analysis and suggest ways they might be translated into qualitative generalizations.
+
+1. **signature**: the terms that actually co-occur in the context of a keyword
+    + What else were the documents discussing when a keyword was invoked?
+2. **paradigmatic similarity**: a measure comparing the signatures of two keywords
+    + What words tended to be invoked using similar language?
+3. **syntagmatic similarity**: a measure comparing context words
+    + What words tend to appear together *as context words*?
+    
+In addition to these, I use vector arithmetic to generate two kinds of pseudo-words. (This is a technique for computationally assisted close reading.) For any instance of a keyword, you can get a sense of its use-in-context by combining it with its context terms:
+
+4. **component-wise addition**: add the vectors of a keyword-in-context
+     + What dominant ideas are operating as unspoken, axiomatic assumptions?
+5. **component-wise multiplication**: multiply the vectors of a keyword-in-context
+     + What precise points of connection are being made among words?
+
+![Table showing rights vector-space model][image2]
+
+While **signature** simply refers to the word-count frequencies that make up each row, **paradigmatic** and **syntagmatic similarity** are the results of similarity measurements, across the columns and rows respectively. I use the Pearson correlation to compute similarity.
+
+To get a sense of how these different modes of comparison work across a corpus, I'll look at `rights` across the EEBO collection, and then I'll focus more tightly on John Locke's use of the word in his *Two treatises of government* (1690). The EEBO-TCP collection is much smaller than the ECCO database that de Bolla used for his study. I won't be tracing change in the concept of rights over time. Instead, I'll tease out rights' conceptual architecture during the English Civil War and Restoration periods, and I'll walk through some initial, very preliminary experiments with vector-based semantics as a tool for close reading.
+
+#### Rights and their conceptual neighbors
+
+Subsetted to include only works dated 1640 to 1699, the publicly available EEBO-TCP corpus includes 18,311 documents. 1,751 frequently occurring words were chosen as keywords, and each was searched over the corpus as a whole, returning a vector of word frequencies within a context-window of 5 positions before and after.[^2] This dataset and the functions used to analyze it were all compiled into an R package, which can be installed from github at <https://github.com/michaelgavin/empson>. Inside this high-dimensional semantic space, how were rights formulated?
+
+An overview of the signature of `rights` powerfully confirms de Bolla's thesis. In the seventeeth century (his analysis begins a bit later at 1700), rights were intimately connected to institutions of corporate power: `king` and `church` feature prominently in rights' context, as do words like `religion`, `government`, and `parliament`. At the same time, `rights` were not typically invoked as a fundamental feature common to all persons; instead, they were lumped together with `liberties` and `priviledges` that secured power for some groups over others.
+
+This dendrogram shows the thirty words that appear most predominantly around `rights`. (The x-axis groups terms according to the syntagmatic similarity, showing broadly demarcated clusters within rights' discursive orbit.)
+
+![Rights -- signature][image3]
+
+Notice in particular the way that `rights` clusters with its synonyms in this graph. `rights`, `liberties`, `privileges`, and `priviledges` group together in one sub-network, semantically separated from the political contexts in which they're being negotiated. Ancient laws that dictate the norms of civil and religious power, dividing princes and kings from each other and from the church, make up the body of `rights` discursive field. Although the rights of `men` and `people` do find a small niche in this field, and although those rights seem linked somehow to `god`, anything we might plausibly call 'human rights' are far from view. 
+
+A look at keywords paradigmatically similar to `rights` fleshes this picture out further. Rights don't serve as the ground for individuals' claims against the state. Instead, rights-talk functions much like debates over `ecclesiastical` and `civil` `jurisdiction`. Insofar as they might pertain to individuals, they do so exclusively through terms related to property (though, interestingly the term `property` does not appear). `rents`, `revenues`, `estates`, and `possessions` seem applicable mostly to `peers`, whose `heirs` and `successors` `claim` to `possession` rests on `hereditary` traditions of `ancient` `lawes` that must be `maintain`ed and `preserve`d with `prejudice`. (If you're wondering why this chart is skinnier than the others, it's because *paradigmatic similarity* measures similarity across the columns. There are only 1,751 columns in the matrix, compared to 28,235 rows, so there's less variation. The words still cluster, there's just less space between the clusters.)
+
+![Rights -- paradigmatic][image4]
+
+However, when rights were actually invoked, they were nearly always invoked in the context of their `violation`, `invasion`, or `usurpation`. Words syntagmatically similar to `rights` suggest an almost paranoid fear of infringement. The `liberties` and the `prerogatives` of the powerful were under constant threat, it seems, giving lie to the optmistic but isolated assertion that rights could be `undoubted`. There's nothing *self-evident* about rights like these. 
+
+![Rights -- syntagmatic][image5]
+
+The results pictured here won't be surprising to anyone who has studied the history of natural law. "Rights" is a deeply studied and well-known concept, which makes it perfect for this kind of analysis. Instead of being a *surprise*, these results are powerful (if necessarily anecdotal) evidence that vector-based semantics can provide trustworthy descriptions of historical concepts.
+
+This trust is needed, because my analysis is about to get weird. (Or, I should say, weirder.)
+
+### Using vector adaptation to read Locke's 'rights'
+
+One common technique for word-sense discrimination uses vector arithmetic (more conventionally called *vector adaptation*) to identify the distinct sense with which a complex word is being used at any given time. Although computers can't tell the difference between 'plane' and 'plane', they can easily tell the difference between (`pilot` +  `plane` + `landing`) and (`line` + `plane` + `angle`). This technique combines a keyword with its surrounding context words, using either component-wise addition or multiplication, thus generating a pseudo-word that reflects their collective place in a semantic network.
+
+To reiterate a point I made too briefly above, I'll argue that this technique can be used to identify two kinds of conceptual implicatures. First, addition lumps a keyword together will all its context words, capturing every possible connection in the network. My sense is that these baggy pseudo-words, when compared to real words across the corpus, will tend to point to the most important, broadly conceived underlying assumptions that inform any statement. They are particular good at identifying implicit binaries that operate as organizing contrasts. Component-wise addition gives us something close to the axiomatic, noetic, or load-bearing concepts (to use de Bolla's terminology) that support a given statement.
+
+Component-wise multiplication, on the other hand, strips away most of this baggage and leaves in place only the terms held in common by all the words in a given statement. Rather than reflecting the common assumptions used to bring the words together, multiplication reveals what's at stake, or what's potentially suprising, about their combination. Whereas addition reveals a statement's most important unstated assumptions, multiplication reveals its most important unstated goals.
+
+*Full disclosure: I'm on very shaky ground here. Connecting quantitative to qualitative analysis is always tricky business, and de Bolla provides few hints about what patterns of collocation might correspond to what kinds of conceptual relation. Computational linguists, as far as I know, have not used their techniques to tease apart the assumptions of complex, centuries-old philosophical discourse, and they differ over the question of how "attributional similarity" -- that is, the similarity of any two vectors' attributes -- can be correlated to "relational similarity" that places words in concepts. I feel pretty confident about what I've said so far; what follows is more experimental and tentative, and I'm sure it will require later revision and qualification.*
+
+In his *Two treatises of government* (1690), John Locke uses the word 'rights' eighteen times. Reading each use within a context window of 5 words (stopwords removed) returns the following eighteen strings. For each keyword-in-context instance, I took all eleven words and combined their vectors, first using addition and then using multiplication. Rather than provide the signature of the resulting vector, I compared each across the original matrix, pulling out the keywords most paradigmatically similar to the pseudo-word. In the table below, under each KWIC appears the result of the vector adaptation. There's a lot of information in this table, and I spend the rest of this essay describing what I see when I read it.
+
+![Locke's Rights][image6]
+
+Take a look at the very first instance, drawn from the preface -- indeed, from the very opening paragraph -- of Locke's *Treatise*. He describes his hope that the essay will be
+
+> sufficient to establish the Throne of our great Restorer, Our present King *William*; to make good his Title, in the Consent of the People, which being the only one, of all lawful Governments, he has more fully and clearly than any Prince in *Christendom*. And to justifie to the World, the People of **England, whose love of their just and natural Rights, with their Resolution to preserve them, saved the Nation, when it was on the very brink** of Slavery and Ruine.
+
+This brief comment captures well an ambivalence that scholars sometimes find in Enlightenment rights-talk. On the one hand, Locke is clearly attaching rights to the 'People', not to the monarch, but those rights are invoked just as clearly with the express intention of justifying the monarch's authority over those (potentially still rebellious) people.[^3] 
+
+When component-wise addition is applied to this window of terms, the words `england` `whose` `love` `just` `natural` `rights` `resolution` `preserve` `saved` `nation` `brink` are all squished together in a big Venn diagram ('squished' is, I believe, the actual technical term). When these words are added together, the resulting vector looks little like the original `rights` vector. Its signature looks more like the signatures of `hate` `loved` `hatred` `ireland` `scotland` `loves` `affection` or `friendship`.
+
+What happens is that `love`, `england`, and `nation` are very distinct, powerful, and polyvalent terms. Their collocates dominate the resulting vector, which ends up most similar to terms in their conceptual orbit. Added together, Locke's opening rights-talk is revealed to be premised on an intensely normative, binaristic framework of `love` | `hate`, which is itself thoroughly integrated into a geographical scheme that divides `england` from `ireland` and `scotland` (a politically, culturally, and emotionally dysfunctional mess of `love` | `hate` if ever there was one). Notice that other nation-words, like `france` `spain` `dutch` and `italy`, are all absent this list of top words. They often score highly similar to `england`, but in this context, mentioned not in the purview of war, diplomacy, or trade, but instead in relation to a `love` and `resolution` to `preserve` the `nation`, `england` points no longer toward its global rivals, but toward its closer-to-home antitheses.
+
+None of this is explicitly mentioned in the text, of course. Locke is expressly concerned, instead, with `defend`ing a `legal` argument for a new line of `hereditary` rights to the `civil` authority of the `crown`, which can be `maintain`ed and passed down to `successors`. Though Locke does not openly mention `revenues` and `possessions` -- two words powerfully connected to `rights`, as we already know -- these are very correctly identified as key concerns. Establishing the new government's rights to these privileges, among others, is Locke's very explicit goal, though he doesn't refer to money as such.
+
+Vector-based semantics thus captures perfectly rights' ambivalent ideological function in the early Enlightenment. On the one hand, it operated as a powerful appeal to the emotions of the people as citizens of contending, rivalrous nation states. On the other hand, it served a bald political function that was in many ways contradictory to its pathos: rights, for all their claims to universal benevolence, functioned primarily as a way to rationalize competing claims to civil and ecclesiastical authority.
+
+If the first appearance of `rights` is interesting because of differences between its meaning when the words are added and multiplied; another example is interesting because of how similar they are. Look at Locke's `rights` number 8: `regal` `government` `re` `establish` `securing`  `rights` `inheritance` `crowns` `world` `consider` `162`. These words are all so closely related that vector-based addition and multiplication have very similar results. The term `world`, when combined using addition, entails a biblical context (`noah`, most obviously) that is abstracted away through multiplication, but generally the resulting pseudo-words are very similar because the all the words Locke uses here point so similarly toward a common conceptual knot -- that is, toward 'rights' as a justifying logic for state power.
+
+#### 'Women' and the limits of the human in Locke's theory of rights
+
+A brief glance over the table above reveals that component-wise multiplication results in a more consistent frame of reference for `rights` than does component-wise addition. Locke uses lots of words that point in lots of directions, but he combines them in a way that is remarkably consistent. The rows marked `*` display, to my eye, less variation than the rows marked `+`. The contrast between these modes captures the broad discursive base on which Locke's comparatively particular arguments rest.
+
+Nowhere is this dynamic seen more clearly than in Locke's treatment of women. `women` is completely absent from Locke's discussion of `rights`. Using component-wise multiplication to identify implied points of intersection returns one instance of `wives` (see row 6), but rarely does Locke seem to point expressly toward `women` or `woman` as an object of direct discussion. Women's rights are not something Locke writes explicitly about. As we'll see, women's rights might even be unthinkable in his conceptual scheme.
+
+Although never mentioned directly, `women` and related terms appear in several key places (the 5th, 7th, and 11th instances) when Locke's uses of `rights` are combined with its conceptual neighbors using vector addition. The pseudo-words generated in these instances are highly similar to keywords that include `women` `wives` and `wife`. Whatever Locke is talking about in these instances, at some level and in some ways it's very `women`-like.
+
+Let's look, for example, at the 5th instance of `rights.` In this section, Locke is describing (and refuting) a patriarchal theory of kingship that defends absolute monarchy on the principle that kings' powers are derived from an inheritance, justified by God and passed down from Adam, as the earth's first monarch. Describing patriarchal theory, Locke describes the 'rights' of the sovereign, inherited from the first man:
+
+> this Sovereignty he erects ... upon a double Foundation, *viz.* that of *Property,* and that of *Fatherhood,* one was the right he was supposed to have in all Creatures, a right to possess the Earth with the Beasts, and other inferior Ranks of things in it for his Private use, exclusive of all other Men. The other was the Right he was supposed to have, to Rule and Govern **Men, all the rest of Mankind.  
+85. In both these Rights, there being supposed an exclusion of all other Men, it must be upon some reason** peculiar to *Adam,* that they must both be founded.
+
+Locke identifies two key rights-claims at the center of patriarchalism: property over the earth and sovereignty over mankind. As the conclusion of this short passage suggests, Locke's stated goal is to dispute, in both cases, that authority rests in any special, 'peculiar' way with Adam, and that these rights are not, in fact, grounded in him (or his kingly inheritors) to the "exclusion of all other Men."
+
+When the algorithm passed over this passage, it grabbed a window of terms around `rights` that overlaps with both sentences, resulting in an ungrammatical grab-bag of terms: `men` `rest` `mankind` `85` `both` `rights` `being` `supposed` `exclusion` `men` `reason`. When these terms are combined using component-wise multiplication, they draw out key features of Locke's argument, even though he's just laying the groundwork and not yet making his thinking explicit. The keywords `society` `race` `adam` `universal` `noah` `common` `benefit` `happiness` `natural` `creation` and `eve` suggest a universal, natural benevolence directed to the benefit and happiness of society, and not at all particular to one person. The biblical figure of Adam connects out to that which is universal and common, not toward the privileges of the powerful. As a description of what this sequence of terms might be taken to imply, Locke likely would have approved.
+
+Component-wise addition points toward a very different list of keywords, however. Just as above, when the use of terms like `love` and `england` score highly similar to their defining antitheses `hate` and `ireland`, so too using addition here accumulates the associations of words like `men` (which is actually repeated in the passage, so counts double) `mankind` and `reason`. The resulting vector, when compared across the matrix, appears most similar to these words' antonyms: `women` `wicked` `wise` `learned` `beasts` `minds` `honest` `parties` `mad` `angels` and `carnal`. These words suggest a network of affiliations that point from `men` and `reason`, not as Locke might hope toward `society` and `happiness`, but instead back toward their very opposites: `women` and `beasts`. As a social category in the seventeenth century, neither `men` nor `mankind` designated an abstract unity easily paraphraseable as `man`, let alone `human`. Instead, `men` remains embedded in its contrast from `women`; `mankind` points away from itself toward `beasts` and `angels`; while `reason` reinforces the dichotomies that distinguish `wise` and `learned` men from their `wicked` `mad` and `carnal` wives and sisters.
+
+This analysis falls neatly in line with a history of human rights that finds change, not so much in the concept of 'rights', as in the concept of the 'human'. As long as the discourse of rights-bearing personhood remained so intimately bound in a biblical model of nested hierarchies (God is to mankind as king is to subjects as fathers are to wives and children) there's no category that comfortably contains all people. Even if Locke's goal is to break this chain of analogies, he can't do away with them altogether. The rights of men or of mankind in this context can't be paraphrased as 'human rights', because `men` can't be invoked without highlighting the exclusionary logic built into itself.
+
+Of course, we don't need vector-based semantics to tell us that Locke's possessive individualism had women problems, nor that phrases like 'all men are created equal', inherited from the natural law tradition in which Locke writes, implied exlusions at odds with their ostensibly universalist ambitions. Indeed, this analysis re-affirms the most important threads of de Bolla's thesis about rights. The evolution of 'rights' from the 'rights of mankind' to the 'rights of man' required and corresponded to a shift in the discussion surrounding 'man': Were all people conceivable as an abstract totality, or are they conceivable only through the categories that describe mankind's separable parts? de Bolla finds in Thomas Paine a glimpse toward a different, broader conception of rights, such that they might inhere in a shared collective, rather than being possessed by (and therefore potentially taken from) individual persons. This new 'rights' concept, de Bolla argues, makes a brief appearance in the data in the wake of Paine's *Rights of Man*, then largely disappears. 
+
+### Vector-based semantics and the theory of concepts
+
+Anybody with an even cursory knowledge of the documents that make of the EEBO-TCP corpus will know that querying this dataset is like asking: "What did religious controversialists have to say on my topic?" Further problems are caused by the historical sweep of the corpus. Changes in orthography from 1470s through 1630s make statistical comparisons over this time frame difficult, as do the comparatively small numbers of publications early on. I'm usually skeptical when digital humanists claim to need more data, more data, but vector-based semantics requires a very large base of text data in order to smooth out the idiosyncrasies of individual works. For these reasons, I limited my selection to the 18,000 documents first published between 1640 and 1699 but treated them as a chronologically undifferentiated whole. Given what we know about the pace of conceptual change, there isn't much this model can do by itself to reflect the shifts intellectual historians are most interested in. However, as I hope what I've said suggests, the method itself could easily be adapted to show how concepts change over time, given an appropriate dataset.
+
+What's more striking to me, though, is how commensurable the assumptions of vector-based semantics are with a theory of concepts that sees them, not as mental objects or *meanings*, per se, but instead as what de Bolla calls "the common unshareable of culture": a pattern of word use that establishes networks across the language. A concept is not denoted by a word; rather, concepts are emergent effects of words' co-occurence with other words. While de Bolla carefully differentiates his theory from more familiar methods of intellectual history, he doesn't explain how this theory, arrived at autocthonously through his disagreements with other historians, relates to the long tradition of computational linguistics with which it has, to my eye, a very great similarity.
+
+Anyway, vector-space models are very cool. If you're using R or Python to build concordances using keywords-in-context, try throwing the results into a matrix. Existing textbooks geared to digital humanists won't tell you how to do it, but it's actually pretty easy. If you want to use my dataset and my functions, you can get them [here](https://github.com/michaelgavin/empson).
+
+[^1]: The word-context matrix differs from its more familiar cousin, the *document-term matrix*. In a document-term matrix, the columns are documents and the rows are the words. These are the two most common kinds of vector-space models. For a more complete discussion, see Turney and Pantel (2010).
+
+[^2]: A few words about the selection process for the 1,751 keywords. I began by choosing several very different terms and took the thousand most-frequent words that appeared near each: combined into a single vector, the result was 1,751 unique words. They provided a very comprehensive cross section of seventeenth-century discourse.
+
+[^3]: In *The Last Utopia* (Harvard UP, 2012), Samuel Moyn has argued that revolution-era rights discourse has little in common with 'human rights' as we know them today. In the process he differs sharply from Lynn Hunt, whose *Inventing Human Rights* (Norton, 2007) argued for a strong continuity that connects natural law, the rights of man, and human rights. Moyn's frustration with his failure to disprove Hunt's thesis reaches a palpable, frothy apotheosis in his more recent polemic, *Human Rights and the Uses of History* (Verso, 2014). The publisher cites a reviewer describing Moyn as "The most influential of the [human rights] revisionists," a compliment which I am perhaps perverse to read as back-handed. Peter de Bolla's *Architecture of Concepts* can be understood, in part, as a corrective to this debate. Whereas Moyn thinks he's disproved Hunt by demonstrating that the 'human rights' concept has changed since 1776, de Bolla asks the much more difficult and, to a pedant like me, much more interesting question of how concepts change over time. What is a concept? What is the principle of continuity that binds discourse through time and thus makes it available for description as experiencing rupture?
+
+### References
+
+
+
+[image1]: venn_diagram.tiff "Rights Venn Diagram"
+[image2]: similarities.tiff "Table showing rights vector-space model"
+[image3]: rights_sig.jpeg "Rights -- signature"
+[image4]: rights_para.jpeg "Rights -- paradigmatic similarity"
+[image5]: rights_syn.jpeg "Rights -- syntagmatic similarity"
+[image6]: rights_table.jpg "Locke's Rights"
