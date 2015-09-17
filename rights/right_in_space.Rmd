@@ -56,16 +56,16 @@ Subtraction is, I think, the easiest to grasp, but really any mathematical opera
 
 Division is extremely interesting, although it requires a little massaging of the data to avoid dividing by zero. Division returns words in one vector that are nearly absent from the other. The results are usually unexpected and often bizarre. `mind` divided by `soul`, for example, returns a very clearly demarcated discourse of seventeenth-century European statecraft. (I haven't investigated to see which documents are responsible for this odd result, but it wouldn't be hard to find out.) 
 
-Operations like these can be used to tease out the different contexts in which a word is used, a process sometimes called *word-sense disambiguation*. For example, taking `law` or `angle` from `right` clearly separates out their respective discursive contexts. Taking both out highlights `right`'s appearance across a variety discussions, mostly having to do with medicine, sea travel, and war. Here are just the top six words from each vector:
+Operations like these can be used to tease out the different contexts in which a word is used, a process sometimes called *word-sense disambiguation*. For example, taking `law` or `angle` from `right` clearly separates out their respective discursive contexts. Taking both out highlights `right`'s appearance across a variety discussions, mostly having to do with medicine and war. Here are just the top six words from each vector:
 
-right / law | right / angle | right / (law * angle)
+right / law | right / angle | right / (law + angle)
 ------------|---------------|----------------------
-angle       | law           | greet
-angled      | government    | files
-triangle    | honourable    | trenches
-angles      | justice       | armagh
-files       | christ        | spermatick
-spherical   | princes       | fibres
+angle       | law           | kidney
+angled      | government    | trusty
+triangle    | honourable    | artery
+angles      | justice       | pottage
+files       | christ        | arteria
+spherical   | princes       | squadrons
 
 It's perhaps surprising -- at least, it was surprising to me -- how conceptually coherent these resulting vectors usually are, even if they often still blend a variety of contexts or contain idiosyncratic 'noise'. I said above that I was mistaken to interpret word vectors like static objects, but you can see that these results look a lot like topic models. Reading them is very much like reading a word cloud, except the goal isn't to tease apart the different themes in a book, but to tease apart something like the different senses of a word. Or, as de Bolla might put it, to map out a word's affiliations across a networked architecture of concepts.
 
