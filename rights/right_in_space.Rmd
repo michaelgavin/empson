@@ -193,7 +193,7 @@ Anyway, vector-space models are very cool. If you're using R or Python to build 
 ### References
 
 1. Clark, Stephen. “Vector Space Models of Lexical Meaning.” (2014)
-2. de Bolls, Peter. *The Architecture of Concepts: the Historical Formation of Human Rights* (Fordham University Press, 2013).
+2. de Bolla, Peter. *The Architecture of Concepts: the Historical Formation of Human Rights* (Fordham University Press, 2013).
 3. Erk, Katrin. “Vector Space Models of Word Meaning and Phrase Meaning: A Survey.” *Language and Linguistics Compass* (2012): 635-53.
 4. Harris, Zellig. “Distributional Structure.” (1954, reprint 1964 in *The Structure of Language: Readings in the Philosophy of Language*, ed. Fodor and Katz). 
 5. Ide, Nancy and Jean Véronis. “Word-Sense Disambiguation: The State of the Art” *Computational Linguistics* 24, 1 (1998): 1-40.
