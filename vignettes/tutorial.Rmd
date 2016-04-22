@@ -123,8 +123,6 @@ The easiest way to get a sense of these different relationships is just to play 
 
 What I like best in `empson` are the dendrograms. These are built by running `find_similar` and then performing a very simple word-sense disambiguation operation. Basically, it finds the thirty most similar words then performs a simple little clustering algorithm to see which context words group where in relation to each other. You can use any of the similarity measures with the `use` parameter. If you select `use = 'all'` you'll get a graph that takes the top ten words using each measure then maps them together.
 
-I'm sure there are ways to better specify the kinds of conceptual relationships that these graphs suggest. I have been considering network graphs, for example, or some kind of modified Voronoi diagram. But these simple dendrograms seem ripe for interpretation.
-
 ```{r, fig.show = 'hold', fig.width = 6.5, fig.align = 'center', fig.height = 6.5}
 graph_context(mat = eebo, keyword = "succession", use = "all")
 ```
@@ -157,8 +155,6 @@ find_analogies(mat = eebo, positive = c("king","woman"), negative = "man")
 
 This returns some queens' names, and "queen" is the fourth result.
 
-Results are similar when using addition and subtraction, but I have found results to be sharper using multiplication, and the representation of analogies as fractions makes more intuitive sense as an analogy for analogy, at least to me.
-
 However, it's really not super precise. It struggles with analytical thinking, like part-whole relationships, and even with 28,000 words, the vocabulary is pretty limited. But I've been thinking about how to use this, perhaps by finding some canonical relationships. Look over some of the examples I provide in the help page: 
 
 ```r
@@ -167,21 +163,7 @@ However, it's really not super precise. It struggles with analytical thinking, l
 
 *********
 
-## Change over time: `find_change()`
-
-This function does not work with the regular matrices. But if you're working with the .RData files for each individual term, you can trace concept drift. (I posted a ton of these to Google Drive. They're labeled like "right.RData", "rightful.RData", "rights.RData", etc.) It outputs a little scatterplot showing how the meaning has drifted, using 1640 to 1649 as a base. Most words don't change much. The arc for 'succession' is pretty interesting.
-
-```r
-# You have to set the working directory to the folder
-setwd("/folder/with/rdata/files")
-find_change(keyword = "succession")
-```
-
-When `empson` moves into a public release, I probably won't include this function. I can think of some ways to improve it, though, if *change over time* really does turn out to be the focus of our first paper.
-
-**********
-
-## Builing your own matrix: `buildMatrix()`
+## Building your own matrix: `buildMatrix()`
 
 Here's the thing: building your own small matrix is pretty easy, but matrices need to be really big in order to get robust results from a computational linguistics perspective. However, this function is really good if you want to create a sample set (the works of Defoe, say) to see how the word relationships differ in the local context, compared to the whole. I have begun playing around a bit with functions that compare and contrast matrices, but none of that is ready yet.
 
