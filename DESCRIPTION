@@ -7,23 +7,24 @@ Author: person("Michael","Gavin", email = "mgavin@mailbox.sc.edu", role =
     c("aut", "cre"))
 Maintainer: Michael Gavin <michael.a.gavin@gmail.com>
 Description: Create and analyze matrices of text data
-Suggests: 
+Suggests:
     tei2r
 License: CC0 (http://bit.ly/1F96Zgp)
 LazyData: TRUE
-Collate: 
+Collate:
     'buildMatrix.R'
     'compare_matrices.R'
+    'compose.R'
     'docMatrix.R'
     'eebo.R'
     'empson.R'
-    'find_analogies.R'
-    'find_centroid.R'
-    'find_change.R'
     'find_similar.R'
     'graph_context.R'
     'locke.R'
-    'nlaw.R'
-    'vector_adaptation.R'
+    'sig.R'
+    'similarity.R'
+    'similarity_dendrogram.R'
+    'similarity_map.R'
     'zscore.R'
 VignetteBuilder: knitr
+RoxygenNote: 5.0.1

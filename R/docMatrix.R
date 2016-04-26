@@ -18,6 +18,7 @@
 #' a document in the collection, and each row is a word found in that document. In
 #' a word-context matrix, each column is a keyword, and each row is a context term
 #' found within a window of that keyword. 
+#' @export
 docMatrix <- setClass("docMatrix",
                            slots = c(directory        = "character",
                                      indexFile        = "character",
