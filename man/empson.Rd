@@ -9,15 +9,16 @@
 The \code{empson} package builds on \code{tei2r} to create matrix 
 representations of document collections.
 }
-\section{Tutorial}{
+\author{
+Author:
+Michael Gavin
 
-To get started with \code{empson}, follow the tutorial at \code{\link{Tutorial: empson}}.
 
 \strong{Basic operations:}
 \itemize{
   \item \code{\link{buildMatrix}}: Converts documents to matrix format
-  \item \code{\link{find_similar}}: Identifies semantic relationships among terms
-  \item \code{\link{graph_context}}: Maps conceptual structures
+  \item \code{\link{similarity}}: Identifies semantic relationships among terms
+  \item \code{\link{similarity_map}}: Maps conceptual structures
 }
 
 \strong{Sample Data:}
@@ -25,9 +26,5 @@ To get started with \code{empson}, follow the tutorial at \code{\link{Tutorial: 
   \item \code{\link{eebo}}: A large matrix built from the EEBO-TCP corpus, representing
                             all texts from 1640 to 1699.
 }
-}
-\author{
-Author:
-Michael Gavin
 }
 

@@ -8,14 +8,12 @@
 #' @author Author:
 #' Michael Gavin
 #' 
-#' @section Tutorial:
-#' To get started with \code{empson}, follow the tutorial at \code{\link{Tutorial: empson}}.
 #' 
 #' \strong{Basic operations:}
 #' \itemize{
 #'   \item \code{\link{buildMatrix}}: Converts documents to matrix format
-#'   \item \code{\link{find_similar}}: Identifies semantic relationships among terms
-#'   \item \code{\link{graph_context}}: Maps conceptual structures
+#'   \item \code{\link{similarity}}: Identifies semantic relationships among terms
+#'   \item \code{\link{similarity_map}}: Maps conceptual structures
 #' }
 #' 
 #' \strong{Sample Data:}
@@ -26,5 +24,6 @@
 #' 
 #' 
 #' @import tei2r
+#' @import ggplot2
 NULL
 

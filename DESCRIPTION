@@ -1,14 +1,15 @@
 Package: empson
 Type: Package
 Title: Vector-space modeling for historical documents
-Version: 0.0.0.9000
+Version: 0.0.0.9001
 Date: 2015-07-30
 Author: person("Michael","Gavin", email = "mgavin@mailbox.sc.edu", role =
     c("aut", "cre"))
 Maintainer: Michael Gavin <michael.a.gavin@gmail.com>
 Description: Create and analyze matrices of text data
-Suggests:
-    tei2r
+Imports:
+    tei2r,
+    ggplot2
 License: CC0 (http://bit.ly/1F96Zgp)
 LazyData: TRUE
 Collate:
@@ -18,9 +19,8 @@ Collate:
     'docMatrix.R'
     'eebo.R'
     'empson.R'
-    'find_similar.R'
-    'graph_context.R'
     'locke.R'
+    'shakespeare.R'
     'sig.R'
     'similarity.R'
     'similarity_dendrogram.R'
