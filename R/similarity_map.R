@@ -49,13 +49,11 @@ similarity_map = function(mat,
   }
   words = names(results)
   
-  corr_method = function(x,y) { x %*% y / (sqrt(x%*%x) * sqrt(y%*%y)) }
-  
   # Now build a correlations matrix among the words
   mat = mat[words, ]
   correlations = matrix(0, length(words), length(words))
   for (i in 1:nrow(correlations)) {
-    correlations[i, ] = apply(mat, 1, corr_method, mat[i, ])
+    correlations[i, ] = apply(mat, 1, cor, mat[i, ])
   }
   rownames(correlations) = words
 
