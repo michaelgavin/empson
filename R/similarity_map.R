@@ -27,12 +27,12 @@
 #' thirty most similar terms, then clusters them.
 #' @export
 similarity_map = function(mat, 
-                            keyword, 
-                            method = "cosine", 
-                            margin = 1, 
-                            threshold = 50, 
-                            numResults = 40, 
-                            numGrps = 5) {
+                          keyword, 
+                          method = "cosine", 
+                          margin = 1, 
+                          threshold = 50, 
+                          numResults = 40, 
+                          numGrps = 5) {
   if (class(mat) == "docMatrix") {
     mat = mat@mat
   }
@@ -49,11 +49,26 @@ similarity_map = function(mat,
   }
   words = names(results)
   
+  # Set correlation method
+  
+  if (method == "cosine") {
+    corr_method = function(x, y) { x %*% y/(sqrt(x %*% x) * sqrt(y %*% y)) }
+  } 
+  if (method == "euclidean") {
+    corr_method = function(x, y) { sqrt(sum((x - y)^2)) }
+  }
+  if (method == "covariance") {
+    corr_method = cov
+  }
+  if (method == "pearson") {
+    corr_method = cor
+  }
+  
   # Now build a correlations matrix among the words
   mat = mat[words, ]
   correlations = matrix(0, length(words), length(words))
   for (i in 1:nrow(correlations)) {
-    correlations[i, ] = apply(mat, 1, cor, mat[i, ])
+    correlations[i, ] = apply(mat, 1, corr_method, mat[i, ])
   }
   rownames(correlations) = words
 
@@ -61,20 +76,43 @@ similarity_map = function(mat,
   cluster <- cutree(hc, k=numGrps)
   xy <- data.frame(cmdscale(dist(correlations)), factor(cluster), factor(words))
   names(xy) <- c("x", "y", "clusts", "words")
-  p = ggplot(xy, aes(x, y, label = words, colour = clusts))
 
-  p + stat_density2d(aes(alpha = ..level.., fill = clusts), geom="polygon", bins = 30, size = .1) + 
-    scale_alpha_continuous(range=c(0.01,0.075)) +
-    geom_text(colour = "black") +
-    theme_bw() +
-    ggtitle(paste(keyword, method, sep=",")) +
-    xlim(min(xy$x)*1.5,max(xy$x)*1.5) +
-    ylim(min(xy$y)*1.5,max(xy$y)*1.5) +
-    theme(axis.line = element_line(colour = "black"),
-          panel.grid.major = element_blank(),
-          panel.grid.minor = element_blank(),
-          panel.border = element_blank(),
-          legend.position = 'none',
-          text = element_text(size = 2),
-          title = element_text(size=10, face='bold'))
+  single_item_cluster = which(table(xy$clusts) == 1)
+  bad_hits = which(xy$clusts %in% single_item_cluster)
+  
+  outliers = c()
+  if (any(bad_hits)) {
+    outliers = xy$words[bad_hits]
+    xy = xy[-bad_hits,]
+  }
+  
+  p = ggplot(xy, aes(x, y, label = words, colour = clusts))
+  if (length(outliers) == 0) {
+    p = p + xlab("") 
+  }
+  if (length(outliers) == 1) {
+    p = p + xlab(paste("Outlier excluded from graph:", paste(outliers, collapse = ", "))) 
+  }
+  if (length(outliers) > 1) {
+    p = p + xlab(paste("Outliers excluded from graph:", paste(outliers, collapse = ", "))) 
+  } 
+  p + stat_density2d(aes(alpha = ..level.., fill = clusts), geom="polygon", bins = 30, size = 0) + 
+      scale_alpha_continuous(range=c(0.01,0.075)) +
+      geom_text(colour = "black") +
+      theme_bw() +
+      ggtitle(paste(keyword, method, sep=",")) +
+      xlim(min(xy$x)*1.5,max(xy$x)*1.5) +
+      ylim(min(xy$y)*1.5,max(xy$y)*1.5) +
+      ylab("") +
+      theme(axis.line = element_line(colour = "black"),
+            panel.grid.major = element_blank(),
+            panel.grid.minor = element_blank(),
+            panel.border = element_blank(),
+            axis.ticks = element_blank(),
+            axis.line.x = element_blank(),
+            axis.line.y = element_blank(),
+            legend.position = 'none',
+            text = element_text(size = 2),
+            title = element_text(size=10, face='bold'))
+    
 }
