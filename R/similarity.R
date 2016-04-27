@@ -93,7 +93,7 @@ similarity = function(mat, vec, method = "cosine", margin = 1, fullResults = F, 
     }
   }
   
-  if (fullResults == F && margin == 1 && threshold != 0) {
+  if (margin == 1 && threshold != 0) {
     totals = apply(mat,margin,sum)
     pts = quantile(totals, probs = threshold/100)
     mat = mat[which(totals > pts),]
