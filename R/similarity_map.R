@@ -85,7 +85,12 @@ similarity_map = function(mat,
     outliers = xy$words[bad_hits]
     xy = xy[-bad_hits,]
   }
+  xy$x = xy$x + 10
+  xy$y = xy$y + 10
   
+  xdiff = (max(xy$x) - min(xy$x)) / 2
+  ydiff = (max(xy$y) - min(xy$y)) / 2
+
   p = ggplot(xy, aes(x, y, label = words, group = clusts))
   if (length(outliers) == 0) {
     p = p + xlab("") 
@@ -101,8 +106,8 @@ similarity_map = function(mat,
       geom_text(colour = "black") +
       theme_bw() +
       ggtitle(paste(keyword, method, sep=",")) +
-      xlim(min(xy$x)*1.5,max(xy$x)*1.5) +
-      ylim(min(xy$y)*1.5,max(xy$y)*1.5) +
+      xlim(min(xy$x) - xdiff, max(xy$x) + xdiff) +
+      ylim(min(xy$y) - ydiff, max(xy$y) + ydiff) +
       ylab("") +
       theme(axis.line = element_line(colour = "black"),
             panel.grid.major = element_blank(),
