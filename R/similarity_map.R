@@ -85,11 +85,9 @@ similarity_map = function(mat,
     outliers = xy$words[bad_hits]
     xy = xy[-bad_hits,]
   }
-  xy$x = xy$x + 10
-  xy$y = xy$y + 10
   
-  xdiff = (max(xy$x) - min(xy$x)) / 2
-  ydiff = (max(xy$y) - min(xy$y)) / 2
+  xdiff = (max(xy$x) - min(xy$x)) / 4
+  ydiff = (max(xy$y) - min(xy$y)) / 4
 
   p = ggplot(xy, aes(x, y, label = words, group = clusts))
   if (length(outliers) == 0) {
