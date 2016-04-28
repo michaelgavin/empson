@@ -86,7 +86,7 @@ similarity_map = function(mat,
     xy = xy[-bad_hits,]
   }
   
-  p = ggplot(xy, aes(x, y, label = words, colour = clusts))
+  p = ggplot(xy, aes(x, y, label = words, group = clusts))
   if (length(outliers) == 0) {
     p = p + xlab("") 
   }
@@ -97,7 +97,7 @@ similarity_map = function(mat,
     p = p + xlab(paste("Outliers excluded from graph:", paste(outliers, collapse = ", "))) 
   } 
   p + stat_density2d(aes(alpha = ..level.., fill = clusts), geom="polygon", bins = 30, size = 0) + 
-      scale_alpha_continuous(range=c(0.01,0.075)) +
+      scale_alpha_continuous(range=c(0.01,0.033)) +
       geom_text(colour = "black") +
       theme_bw() +
       ggtitle(paste(keyword, method, sep=",")) +
