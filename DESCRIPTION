@@ -20,6 +20,7 @@ Collate:
     'eebo.R'
     'empson.R'
     'locke.R'
+    'normalize.R'
     'shakespeare.R'
     'sig.R'
     'similarity.R'
