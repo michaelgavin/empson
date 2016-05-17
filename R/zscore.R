@@ -2,11 +2,11 @@
 #' 
 #' Return z-score for a keyword in a word-context matrix
 #' 
-#' @slot mat A word-context matrix
+#' @param mat A word-context matrix
 #' 
-#' @slot term The word you are evaluating
+#' @param term The word you are evaluating
 #' 
-#' @slot margin The direction of comparison. If "1", zscore will be computed
+#' @param margin The direction of comparison. If "1", zscore will be computed
 #'              for a row. If "2", zscore will be computed over a column.
 #'              
 #' @export

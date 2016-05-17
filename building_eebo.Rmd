@@ -159,6 +159,7 @@ colnames(eebo) = keywords
 row.names(eebo) = vocab
 for (i in 1:length(range)) {
   print(i)
-  load(paste(loc_texts, as.character(year),".rda", sep=""))
+  year = range[i]
+  load(paste(loc_mats, as.character(year),".rda", sep=""))
   eebo = eebo + mat
 }
