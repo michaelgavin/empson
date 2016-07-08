@@ -16,6 +16,7 @@ Collate:
     'buildMatrix.R'
     'compare_matrices.R'
     'compose.R'
+    'deebo.R'
     'docMatrix.R'
     'eebo.R'
     'empson.R'

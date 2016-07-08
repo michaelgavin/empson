@@ -17,8 +17,6 @@
 #'              the columns.
 #'              
 #' @param fullResults Logical value. Default is false.
-#' 
-#' @param threshold Numeric value: 0 to 100. Default is 0. 
 #'                 
 #' @section What it does:
 #' Each one of these similarity measurements captures slightly different relationships
@@ -37,19 +35,9 @@
 #' matrix, \code{margin = 2} will read across the columns, and so will be limited only to those
 #' words for which \code{empson} built concordances.
 #' 
-#' The \code{threshold} parameter filters out low-frequency words for human reading, limiting 
-#' results to the frequency percentile of the threshold. For example, if threshold = 50, only 
-#' words with above-average frequency will be included in the displayed results. If set to 0, there 
-#' is no threshold and all results are returned.  Raising the threshold to 90 or 95 will limit 
-#' results to only higher-frequency words. Often this is desirable if you're looking for human-
-#' readable output, though it's worth keeping in mind that the conceptual relations at play
-#' among high-frequency and low-frequency terms are underdetermined. Filtering out low-frequency
-#' words often 'improves' the outputs of topic models and similarity measurements, in that it 
-#' restricts the output to words people use often enough to feel comfortable interpreting across
-#' contexts. Whether that comfort is trustworthy or misleading is not known.
 #' 
 #' @return If \code{fullResults} is true, all results are included in a full-length vector. If
-#'         false, only the 12 most similar terms with frequency above the threshold will
+#'         false, only the 12 most similar terms will
 #'         be displayed. (In general, include the full results when you plan to use the
 #'         vector for further evaluation. Display partial results when you're just 
 #'         glancing over the top hits.)
@@ -58,7 +46,6 @@
 #' # For most similar words in a word-context matrix
 #' data(eebo)
 #' similarity(mat = eebo, vec = "rights") 
-#' similarity(mat = eebo, vec = "rights", threshold = 95)
 #' similarity(mat = eebo, vec = "rights", method = "euclidean")
 #' 
 #' # For most similar words of a composite vector
@@ -73,7 +60,7 @@
 #' similarity(mat = eebo, vec = "rights", fullResults = TRUE)
 #' 
 #' @export
-similarity = function(mat, vec, method = "cosine", margin = 1, fullResults = F, threshold = 0) {
+similarity = function(mat, vec, method = "cosine", margin = 1, fullResults = F) {
   cos_sim = function(x,y) { x %*% y / (sqrt(x%*%x) * sqrt(y%*%y)) }
   euc_dist = function(x, y) { sqrt(sum((x - y) ^ 2)) }
   
@@ -91,12 +78,6 @@ similarity = function(mat, vec, method = "cosine", margin = 1, fullResults = F, 
       if (keyword %in% colnames(mat) == F) stop("Your keyword doesn't match any of your matrix's column names.")
       vec = mat[,keyword] 
     }
-  }
-  
-  if (margin == 1 && threshold != 0) {
-    totals = apply(mat,margin,sum)
-    pts = quantile(totals, probs = threshold/100)
-    mat = mat[which(totals > pts),]
   }
   
   if (method %in% c("cosine", "euclidean", "covariance", "pearson") == F) {

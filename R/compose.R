@@ -30,8 +30,7 @@
 compose <- function(mat, 
                     positive = "", 
                     negative = "", 
-                    operation = "*",
-                    fullResults = T,
+                    operation = "+",
                     method = "cosine", 
                     margin = 1, 
                     threshold = 0)
@@ -84,11 +83,6 @@ compose <- function(mat,
   } else {
     vec = pos
   }
-  if (fullResults == F) {
-    results = similarity(mat = mat, vec = vec, method, margin, threshold)
-    results = results[which(names(results) %in% c(positive, negative) == F)]
-  } else {
-    results = vec
-  }
+  results = vec
   return(results)
 }
