@@ -4,11 +4,11 @@
 \alias{buildMatrix}
 \title{Gathers word frequencies into a matrix.}
 \usage{
-buildMatrix(dt, type = "docTerm", wordLimit = 5000, modelSize = 500,
+buildMatrix(dl, type = "docTerm", wordLimit = 5000, modelSize = 500,
   context = 5, method = "raw")
 }
 \arguments{
-\item{dt}{A \code{docTexts} object that contains the full
+\item{dl}{A \code{docList} object that contains the full
 text of each document in your corpus.}
 
 \item{type}{A string (either "docTerm" or "wordContext") to
@@ -43,9 +43,8 @@ dm     a \code{docMatrix} object with frequency
 Gathers word frequencies into a matrix.
 }
 \examples{
-dt = docTexts()
-dm = getDocMatrix(dt)
-dm = getDocMatrix(dt = dt, type = "docTerm", wordLimit = NULL, method = "proportional")
-dm = getDocMatrix(dt = dt, type = "wordContext", wordLimit = 5000, modelSize = 500, context = 5, method = "raw")
+dm = buildMatrix(dl)
+dm = buildMatrix(dl = dl, type = "docTerm", method = "proportional")
+dm = buildMatrix(dl = dl, type = "wordContext", wordLimit = 5000, modelSize = 500, context = 5, method = "raw")
 }
 

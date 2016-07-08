@@ -10,7 +10,7 @@
 #' 
 #' Gathers word frequencies into a matrix.
 #' 
-#' @param dt          A \code{docTexts} object that contains the full
+#' @param dl          A \code{docList} object that contains the full
 #'                    text of each document in your corpus.
 #'                
 #' @param type        A string (either "docTerm" or "wordContext") to
@@ -41,15 +41,14 @@
 #'                data for the corpus.
 #' 
 #' @examples
-#' dt = docTexts()
-#' dm = getDocMatrix(dt)
-#' dm = getDocMatrix(dt = dt, type = "docTerm", wordLimit = NULL, method = "proportional")
-#' dm = getDocMatrix(dt = dt, type = "wordContext", wordLimit = 5000, modelSize = 500, context = 5, method = "raw")
+#' dm = buildMatrix(dl)
+#' dm = buildMatrix(dl = dl, type = "docTerm", method = "proportional")
+#' dm = buildMatrix(dl = dl, type = "wordContext", wordLimit = 5000, modelSize = 500, context = 5, method = "raw")
 #' @export
-buildMatrix = function(dt, type = "docTerm", wordLimit = 5000, modelSize = 500, context = 5, method = "raw") {
+buildMatrix = function(dl, type = "docTerm", wordLimit = 5000, modelSize = 500, context = 5, method = "raw") {
   dm = docMatrix()
-  dm@directory       = dt@directory
-  dm@indexFile       = dt@indexFile
+  dm@directory       = dl@directory
+  dm@indexFile       = dl@indexFile
   dm@mat             = matrix()
   print("Calculating frequencies for each text.  Accessible by dm@mat")
   if (method %in% c("raw", "proportional") == F) {
@@ -59,20 +58,20 @@ buildMatrix = function(dt, type = "docTerm", wordLimit = 5000, modelSize = 500, 
     stop("Type must be specified either as 'docTerm' or 'wordContext'.")
   }
   if (type == "docTerm") {
-    vocab = names(sort(table(unlist(dt@text)), decreasing = T))
+    vocab = names(sort(table(unlist(dl@texts)), decreasing = T))
     if (class(wordLimit) != "NULL") { vocab = vocab[1:wordLimit] }
-    dm@mat = matrix(0, length(vocab), length(dt@text))
+    dm@mat = matrix(0, length(vocab), length(dl@texts))
     rownames(dm@mat) = vocab
-    colnames(dm@mat) = names(dt@text)
-    for (i in 1:length(dt@text)) {
+    colnames(dm@mat) = names(dl@texts)
+    for (i in 1:length(dl@texts)) {
       if (class(wordLimit) == "NULL") {
-        wordfreqs = table(dt@text[i])
+        wordfreqs = table(dl@texts[i])
         words = names(wordfreqs)
         freqs = as.numeric(wordfreqs)
         if (method == "raw") { dm@mat[words,i] = freqs }
         if (method == "proportional") { dm@mat[words,i] = freqs / sum(freqs)  }
       } else {
-        wordfreqs = table(dt@text[i])
+        wordfreqs = table(dl@texts[i])
         wordfreqs = wordfreqs[intersect(names(wordfreqs),rownames(dm@mat))]
         words = names(wordfreqs)
         freqs = as.numeric(wordfreqs)
@@ -87,7 +86,7 @@ buildMatrix = function(dt, type = "docTerm", wordLimit = 5000, modelSize = 500, 
     if (modelSize > 5000) {
       stop("For this application, the model should be built with fewer than 5,000 words. Too high and the machine will run forever.")
     }
-    alltext = unlist(dt@text)
+    alltext = unlist(dl@texts)
     print("Building vocabulary of context words...")
     vocab = names(sort(table(alltext), decreasing = T))
     keywords = vocab[1:modelSize]
@@ -96,9 +95,9 @@ buildMatrix = function(dt, type = "docTerm", wordLimit = 5000, modelSize = 500, 
     colnames(dm@mat) = keywords
     for (i in 1:length(keywords)) {
       term_kwics = list()
-      for (j in 1:length(dt@text)) {
+      for (j in 1:length(dl@texts)) {
         print(paste("Gathering context data on word", i, "of", length(keywords)))
-        text = dt@text[[j]]
+        text = dl@texts[[j]]
         hits = which(text == keywords[i])
         kwics = list()
         if (keywords[i] %in% text) {

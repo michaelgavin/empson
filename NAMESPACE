@@ -3,6 +3,7 @@
 export(buildMatrix)
 export(compare_matrices)
 export(compose)
+export(normalize)
 export(sig)
 export(similarity)
 export(similarity_dendrogram)

@@ -4,14 +4,9 @@
 \name{docMatrix-class}
 \alias{docMatrix}
 \alias{docMatrix-class}
-\title{An S4 class that contains and manages word-frequency data
- 
-\code{docMatrix} creates a special \code{tei2r} object that
-represents a document collection as a matrix of words}
+\title{An S4 class that contains and manages word-frequency data}
 \description{
-An S4 class that contains and manages word-frequency data
- 
-\code{docMatrix} creates a special \code{tei2r} object that
+The \code{docMatrix} creates a special \code{empson} object that
 represents a document collection as a matrix of words
 }
 \section{Slots}{
@@ -31,7 +26,7 @@ for a word-context matrix.}
 
 The \code{docMatrix} object holds a vector-space model of
 your document collection. The two most common vector-space models (which
-are the only two currently supported in \code{tei2r}) are document-term 
+are the only two currently supported in \code{empson}) are document-term 
 matrices and word-context matrices. In a document-term matrix, each column is
 a document in the collection, and each row is a word found in that document. In
 a word-context matrix, each column is a keyword, and each row is a context term

@@ -1,8 +1,8 @@
 Package: empson
 Type: Package
 Title: Vector-space modeling for historical documents
-Version: 0.0.0.9001
-Date: 2015-07-30
+Version: 1.0.0
+Date: 2016-07-08
 Author: person("Michael","Gavin", email = "mgavin@mailbox.sc.edu", role =
     c("aut", "cre"))
 Maintainer: Michael Gavin <michael.a.gavin@gmail.com>

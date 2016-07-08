@@ -6,17 +6,15 @@
 \usage{
 zscore(mat, term, margin = 1)
 }
+\arguments{
+\item{mat}{A word-context matrix}
+
+\item{term}{The word you are evaluating}
+
+\item{margin}{The direction of comparison. If "1", zscore will be computed
+for a row. If "2", zscore will be computed over a column.}
+}
 \description{
 Return z-score for a keyword in a word-context matrix
 }
-\section{Slots}{
-
-\describe{
-\item{\code{mat}}{A word-context matrix}
-
-\item{\code{term}}{The word you are evaluating}
-
-\item{\code{margin}}{The direction of comparison. If "1", zscore will be computed
-for a row. If "2", zscore will be computed over a column.}
-}}
 
