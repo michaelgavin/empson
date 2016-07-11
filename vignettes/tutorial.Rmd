@@ -10,9 +10,9 @@ vignette: >
 ---
 ## Introduction:
 
-This tutorial will walk you through the basics of using the `empson` R package. The `empson` package builds on the basic functionality of `tei2r` to convert TEI-encoded and plain-text documents into word vectors. `empson` converts `tei2r` objects into vector-space models (word-count matrices). The `tei2r` and `empson` packages can build a variety of vector-space model types, but in this initial development version, the analysis functions are all designed to work with a specific data format: the word-context matrix.
+This tutorial will walk you through the basics of using the `empson` R package. The `empson` package builds on the basic functionality of `tei2r` to convert TEI-encoded and plain-text documents into word vectors. `empson` converts `tei2r` objects into vector-space models (word-count matrices). The `tei2r` and `empson` packages can build a variety of vector-space model types, but in this initial  version, the  functions are all designed to work with a specific data formats: word-context and term-document matrices.
 
-The package includes a sample dataset, `eebo`, drawn from the EEBO-TCP corpus, using all texts published between 1640 and 1699. This tutorial will use the `eebo` model as its test case. Two other sample models: `nlaw` and `locke` are smaller and will perform the same calculations more quickly.
+The package includes a sample word-context matrix, `eebo`, drawn from the EEBO-TCP corpus, using all texts published between 1640 and 1699. A document matrix, called `deebo`, is drawn from the same collection. This tutorial will use the `eebo` model as its test case.
 
 This tutorial covers the following topics:
 
