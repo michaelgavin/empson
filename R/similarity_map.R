@@ -86,7 +86,6 @@ similarity_map = function(mat,
     
     xdiff = (max(xy$x) - min(xy$x)) / 4
     ydiff = (max(xy$y) - min(xy$y)) / 4
-    
     p = ggplot(xy, aes(x, y, label = words, group = clusts))
     if (length(outliers) == 0) {
       p = p + xlab("") 
@@ -97,7 +96,7 @@ similarity_map = function(mat,
     if (length(outliers) > 1) {
       p = p + xlab(paste("Outliers excluded from graph:", paste(outliers, collapse = ", "))) 
     } 
-    p + stat_density2d(aes(alpha = ..level.., fill = clusts), geom="polygon", bins = 30, size = 0) + 
+    p = p + stat_density2d(aes(alpha = ..level.., fill = clusts), geom="polygon", bins = 30, size = 0) + 
       scale_alpha_continuous(range=c(0.01,0.033)) +
       geom_text(colour = "black") +
       theme_bw() +
@@ -114,6 +113,7 @@ similarity_map = function(mat,
             legend.position = 'none',
             text = element_text(size = 2),
             title = element_text(size=10, face='bold'))
+    print(p)
   }
   if (margin == 2) {
     mat = mat[,words]
@@ -156,7 +156,7 @@ similarity_map = function(mat,
     if (length(outliers) > 1) {
       p = p + xlab(paste("Outliers excluded from graph:", paste(outliers, collapse = ", "))) 
     } 
-    p + stat_density2d(aes(alpha = ..level.., fill = clusts), geom="polygon", bins = 30, size = 0) + 
+    p = p + stat_density2d(aes(alpha = ..level.., fill = clusts), geom="polygon", bins = 30, size = 0) + 
       scale_alpha_continuous(range=c(0.01,0.033)) +
       geom_text(colour = "black") +
       theme_bw() +
@@ -173,6 +173,7 @@ similarity_map = function(mat,
             legend.position = 'none',
             text = element_text(size = 2),
             title = element_text(size=10, face='bold'))
+    print(p)
   }
  
     
