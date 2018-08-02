@@ -1,0 +1,130 @@
+---
+title: "A mathematical theory of authorial intention"
+author: "Michael Gavin"
+date: "March 28, 2017"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Tutorial: empson}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+> *This post is part of an unofficial series of theoretical musings. Sometimes I want to think about **how quantitative techniques redefine the terms of literary inquiry.** These vignettes are meant to be experimental and fun and their goal is to envision a new language of criticality for literary studies.*
+
+In this vignette, I want to think about how the computational study of semantics, of meaning, might give us a new way to talk about **authorial intention**.
+
+My basic gambit is to claim that computational semantics imply an embedded theory of intention. Although speech and language processing never use the language of intention as that term is used in literary theory, nonetheless questions of intended meaning come up all the time.
+
+The theory I'll present here depicts intention as a kind of dialectic between semantic freedom and constraint. On the one hand, authors use documents to push ideas in new directions. I'll call this **conceptual work**. On the other hand, texts tend to pull ideas back to a common mean or norm. I'll call this **intentional transparency.** Here's the theory, in a nutshell:
+
+1. For any document (*d*) from a corpus (*V*), the conceptual work (*C*) associated with each word (*w*) is a product of the word's frequency and idiosyncrasy, such that $$C = F \Delta$$ where *F* is the document-level term frequency and \Delta represents the distance separating the word's use in *d* from its use over *V*.
+
+2. The intentional transparency (*T*) of a document is the complement to the entropy of the conceptual work performed by its words, such that $$T_{d} = 1 - \Sigma C_{w} log_{n}( 1 / C_{w} )$$ where *n* is the number of word types contained in *d*.
+
+Let me explain. First a few words about intention as a concept:
+
+***************************
+
+### an intention is a declaration of fit between a statement and its paraphrase.
+
+To use the language of intention is to step into a dense thicket of theoretical difficulty. At stake is the question of how mental states like beliefs and desires manifest outwardly in the physical world. The difference between an action someone intends to perform and an event that just happens rests on mental states. If a hailstone drops on my head, well, that happened. If you eat my sandwich, I'll say that's something you *did*. Similarly, we might agree that the economic collapse of 2008-2009 was caused by the actions of financiers who intentionally falsified mortgage-backed securities, but someone else might reply that their behaviors represent a systemic response to changes in banking laws. As G. E. M. Anscombe argued, intentions exist under the descriptions of actions, but "an action which is intentional under one description may not be intentional under another."[^anscombe] Nonetheless, the human mind is an intention-attributing machine. According to Lisa Zunshine, we "read" the minds of others so habitually we "take our own mind-reading capacity completely for granted and notice it no more than we notice oxygen when we wake up in the morning."[^zunshine] To attribute an intention to someone else's actions is to exercise this reflexive cognitive faculty.
+
+To place a text under the description of an intention is to declare a fit (or lack thereof) between the text and its paraphrase. When you say, "What the author's saying here is ..." you're describing an intention by declaring a match between the author's text and your paraphrase of that text. This can also work negatively. You can point out a lack of fit ("The author's isn't saying that ...") by describing what an author's intention *isn't*. Approached in analytic philosophy, the problem of "intention" involves the question of how mental states like desires, beliefs, and choices become manifest in the physical world. In literary theory, intention has long been a flashpoint of controversy.[^littheory]
+
+When I define "intention" as a declaration of fit between a statement and a paraphrase, my phrasing is meant to echo Cleanth Brooks's "The Heresy of Paraphrase" (1947). The key distinction for Brooks is between the poem, on the one hand, and, on the other, the paraphrase that critics use to represent its intended meaning. For Brooks, "the paraphrase is not the real core of meaning which constitutes the essence of the poem."[^brooks1] Instead, meaning can only be found in the diction and structure of the poem when considered more or less by itself. Considering poetry in this way allows for a heightened sensitivity to a wider array of meaning. Echoing William Empson, Brooks says, "the word, as the poet uses it, has to be conceived of, not as a discrete particle of meaning, but as a potential of meaning, a nexus or cluster of meanings." To insist on the special particularity of the poem -- to resist the impulse to read the poet's mind -- frees the critic to assume a more flexible interpretive disposition and to follow poetry down its many polysemous paths.
+
+Brooks concludes with an analogy that uses Alexander Pope's *The Rape of the Lock* (1714) to represent all poetry,
+
+> *In one sense, Pope's treatment of Belinda raises all the characteristic problems of poetry. For Pope, in dealing with his "goddess,"" must face the claims of naturalism and of common sense which would deny divinity to her [and] transcend the conventional and polite attributions of divinity which would be made to her as an acknowledged belle. ... The poetry must be wrested from the context: Belinda's lock, which is what the rude young man wants and which Belinda rather prudishly defends and which the naturalist asserts is only animal and which displays in its curled care the style of a particular era of history, must be given a place of permanence among the stars.*[^brooks]
+
+According to Brooks, Belinda's divinity is either silly or deflatingly conventional. From the perspective of common sense, the claim is ridiculous; she's just a girl. From the perspective of social convention, it's a dead metaphor. To read Pope's poem as the transparent expression of an intention -- to try to shoehorn the poem into something he might be *saying* -- is to fit it to bad models. There's a flow of cultural expectation about what words mean, and it'd be all too easy to let Pope's poem be caught in that flow. Belinda needs to be pulled out and transformed into an object understood in her own semantically independent terms.
+
+Thus for Brooks reading for "intention" is dangerous because fitting the meaning of the poem to the meaning of the paraphrase tends to distract from the author's larger ambitions and tends to overlook the conceptual work poems perform. *Rape of the Lock* is meant to push against our common-sense notions of femininity and divinity, so accounting for Pope's larger intentions means recognizing a *lack of fit* between the poem and common wisdom.
+
+### intentions select from a system of semantic possibilities
+
+A very different model of intention is at work in Claude Shannon's and Warren Weaver's *The Mathematical Theory of Communication* (1949), which appeared right around the same time. Shannon in particular was content to leave the whole question of meaning aside: "Frequently the messages have meaning; that is they refer to or are correlated according to some system with certain physical or conceptual entities. These semantic aspects of communication are irrelevant to the engineering problem."[^shannon1] What matters for Shannon isn't a relationship between the message and the outside world. He doesn't ask what messages mean or what they're about. Instead, he focuses on the operation of the system as a whole: "The significant aspect is that the actual message is one selected from a set of possible messages. The system must be designed to operate for each possible selection, not just the one which will actually be chosen since this is unknown at the time of design" (3). The key point here, which Weaver also highlights in his addendum, is to see any individual message, not as the manifestation of some author's intention, but as an instance of a system of possibilities, as an actual message selected from a set of possible messages.[^int_theory]
+
+When he gets to the conclusion of his addendum, Weaver anticipates a desire to reconcile the mathematical, technical theory of communication with the interpretive questions about how language communicates ideas and describes the world. Building towards his conclusion, Weaver adopts a regretful tone as he acknowledges this shortcoming, but he quickly turns to an odd analogy clearly meant to spark his readers' desires:
+
+> *The concept of information developed in this theory at first seems disappointing and bizarre -- disappointing because it has nothing to do with meaning, and bizarre because it deals not with a single message but rather with the statistical character of a whole ensemble of messages, bizarre also because in these statistical terms the two words information and uncertainty find themselves to be partners.*
+
+> *An engineering communication theory is just like a very proper and discreet girl accepting your telegram. She pays no attention to the meaning, whether it be sad, or joyous, or embarrassing. But she must be prepared to deal with all that come to her desk. … Language must be designed (or developed) with a view to the totality of things that man may wish to say; but not being able to accomplish everything, it too should do as well as possible as often as possible.* (Warren Weaver, *A Mathematical Theory of Communication*, p. 116) 
+
+Under this fantasy, language has a pure transparency. The girl accepting your telegram attaches herself to no meaning in particular because in her role she encompasses all meanings. As a communication channel, she contains and transmits the intentions of all men. She is a system of semantic possibilities.
+
+In Cleanth Brooks's account of Pope's Belinda, the feminine object is reified as a poetic artifact -- she's pure message -- that reaches out to and transcends the common flow of meaning. In Warren Weaver's vision, the girl represents a noiseless communication channel -- she's pure medium -- that passively encompasses all imaginable intentions.
+
+We're thus left with two ideas about what a proper theory of intention would need to accomplish. (Both weirdly presented as fantasies of gender domination.) On the one hand, a theory of intention needs to explain where documents push against the received wisdom of their times. Which ideas are used most differently, most distinctively? Where can we see the human mind at work? On the other hand, intention needs to explain how documents select from (or otherwise participate in) the larger system of meaning that is the language as a whole. Which ideas are passively invoked and transmitted?
+
+When we describe "intentions" by fitting statements to paraphrases, we engage in this kind of dialectical thinking, sometimes teasing out the ways a text seems unique, other times finding ways that it seems to communicate ideas transparently. As should be obvious, though, both kinds of claims rest on each other. Both engage the same basic task of comparing *what the document says* with *what kinds of things the document might say*.
+
+So how can we generalize over this? Approached computationally, we might re-interpret these imperatives as two questions:
+
+1. For any given document, which words are used most distinctively? (The keyword-extraction problem.)
+
+2. How typically or atypically does the document distribute semantic variance? (The document-comparison problem.)
+
+In the next section, I'll talk a bit about how computational semantics can be used to address these problems.[^modeling]
+
+**************************************
+
+### word-sense disambiguation as a theory of intention
+
+Word-sense disambiguation identifies intentions by matching statements to their closest parallels in a semantic model.
+
+It may seem like a strange thing to say, but computers often attribute intentions to human minds. When Google or the NSA read your email, they're reading for intention. And every time any piece of software supported by a semantic model addresses you, it places your discourse under the description of an intention: "These are the websites you're looking for." "Here are the words you spoke." "These are some goods and services you may wish to buy."
+
+Such intention-attributions aren't always perfect. If you say "The rain in Spain falls mainly on the plane,"" you don't want Siri to think you said this:
+
+> The reign in Spain falls mane Lee on the plane.
+
+Or, what if you type "nirvana"" into a search engine? Are you looking for websites about an overrated 90s grunge band or do you seek an ultimate state of being?
+
+****************************
+<img src="https://github.com/michaelgavin/empson/blob/master/img/nirvana.jpg?raw=true" width="700px" height="400px" />
+
+***************************
+Across these different applications, the general semantic task of word-sense disambiguation separates intended meanings from a field of possible meanings.[^wsd] That's what I mean when I say that intentionality sits untheorized at the center of many semantic tasks. Any time you search on Google; any time you speak commands into a smartphone; any time you receive recommendations from a website. In all these cases, the computer places you under the description of an intention.[^anscombe2]
+
+Semantic models are designed to read your mind. But like any good close reader, the model knows it can do this only through careful attention to your texts.
+
+Software engineers in information retrieval developed the "bag-of-words hypothesis"" to represent documents as points in vector spaces.[^bag] In information retrieval, the documents most relevant to a query will be those most-similar to the words of a search query. Vector-space models treat values as discrete objects within continuous space. 
+
+![](https://github.com/michaelgavin/empson/blob/master/img/salton.jpg?raw=true)
+
+The meaning of an individual statement is measured as the cosine distance between a term's overall uses and its use in a particular instance, where "use in a particular instance" is a vector combination of the word and its immediate collocates.
+
+![](https://github.com/michaelgavin/empson/blob/master/img/wsd.jpg?raw=true)
+
+
+
+
+
+For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+[^zunshine]: Lisa Zunshine, *Why We Read Fiction: Theory of Mind and the Novel* (Columbus: Ohio State University Press, 2006), 85.
+
+[^anscombe]: G.E.M. Anscombe, *Human Life, Action and Ethics: Essays by G.E.M. Anscombe* (Luton: Imprint Academic, 2011), 214.
+
+[^brooks]: Cleanth Brooks, "The Heresy of Paraphrase", in *The Well-Wrought Urn*, p. 211.
+
+[^anscombe2]: Footnote Anscombe et al again.
+
+[^brooks1]: Cite Brooks.
+
+[^int_theory]: Because for Shannon the engineering problem involved the relationship between actual messages and a set of possible messages, he thought probability theory offered the best approach. This led him to characterize the information contained in a message as a function of entropy: the more play that exists in any communications system, the more information is contained in any individual message.I’ll turn to the details of Shannon’s theory in a moment, but here I should mention that, by separating the semantic aspects of communication from the statistical properties of the medium, Shannon and Weaver laid a rift in information theory that persisted for decades. Scholars interested in the semantics complained that Shannon failed to account for them. Many since have tried to fill this gap. Weaver anticipated their needs and, although he was careful to specify that “information must not be confused with meaning” (98), he nonetheless believed that these two lines of inquiry could be made compatible. An author’s intentions “can make use only of those signal accuracies” which a medium makes possible, thus “the theory of Level A [engineering] is, at least to a significant degree, also a theory of levels B [intention] and C [rhetoric]” (98). Exactly what the connection was or how this dependency might work, he didn’t say.
+
+[^shannon1]: Shannon, *Mathematical Theory of Communication*, p. 3.
+
+[^modeling]: You'll see that the *what* question (What is intention?) will get strangely blurred with the *how* question (How can we model intention?) This is how computational work intervenes in the scholarly task of theorizing. This is the task of modeling. By learning how to model things, we learn more about what those things are.
+
+[^wsd]: Cite Ide and Veronis on the history of WSD.
+
+
+[^bag]: (Luhn 1953, Salton 1975, Schütze 1992, Turney & Pantel 2010). 
+
+[^littheory]: Cite Wimsatt and Beardsley, Derrida, etc.
+
+This is the opening question: If computational semantics evaluate the intentions of statements (search queries, etc.) by comparing them to patterns over a corpus, how might we use the same techniques to find and measure intentions of the kind literary history is interested in. When are the meanings of authors knowable? How do books touch concepts? Where do they intervene in a conceptual structure? Conceptual work: How do documents push against the conceptual structure of a corpus? If model presume a fit between statement and model, where is that fit most tendentious?
+
+
