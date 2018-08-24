@@ -107,9 +107,9 @@ The purpose of this is to reduce the size of the matrix (otherwise it becomes ve
 
 Notice that the `keywords` object is built using the `intersect()` function. The line of code that reads `keywords = intersect(keywords, v[1:4891])` limits the `keywords` object to include only words that are among the 4,891 most frequent **in every single year**. Any word that is not among the 4,891 most frequent words, even in just one year, will be excluded. This ensures continuity over time, such that the keywords will be applicable to every year. The number 4,891 was chosen because it was the threshold at which the corpus returned exactly 2,000 keywords.
 
-The `vocab` vector is built differently, and results in about 32,000 words. Notice that it, too, uses an `intersect()` operation, though it intersects with the entire vocabulary, rather than limited to 4,891 most frequent words. Still, the vocabulary of English in EEBO that is used every single year is quite limited: only about 11,000 words. The next line of code, `vocab = c(vocab,v[1:20000])`, uses a concatenate function, `c()`, rather than `intersect()`. This takes the top twenty thousand words in any given year and adds them into the vocabulary.
+The `vocab` vector is built differently, and results in about 32,000 words. Notice that it, too, uses an `intersect()` operation, though it intersects with the entire vocabulary, rather than limited to 4,891 most frequent words. So it throws out old words as it goes. Any word in the vocabulary that isn't in the vocabulary of the current year gets tossed, then in the next line of code, `vocab = c(vocab,v[1:20000])`, uses a concatenate function, `c()` to add the 20,000 most frequent words in. This takes the top twenty thousand words in any given year and adds them into the vocabulary.
 
-As a consequence, the vocabulary of the `eebo` matrix includes two sets of words: either words that are used *every* single year, regardless of frequency, and words that are among the 20,000 most freqent in *any* single year.
+As a consequence, the vocabulary of the `eebo` matrix includes two sets of words: either words that are used *every* single year, regardless of frequency, and words that are among the 20,000 most freqent in the final year of 1699.
 ```r
 keywords = c()
 vocab = c()
