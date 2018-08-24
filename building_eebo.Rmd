@@ -109,7 +109,12 @@ Notice that the `keywords` object is built using the `intersect()` function. The
 
 The `vocab` vector is built differently, and results in about 32,000 words. Notice that it, too, uses an `intersect()` operation, though it intersects with the entire vocabulary, rather than limited to 4,891 most frequent words. So it throws out old words as it goes. Any word in the vocabulary that isn't in the vocabulary of the current year gets tossed, then in the next line of code, `vocab = c(vocab,v[1:20000])`, uses a concatenate function, `c()` to add the 20,000 most frequent words in. This takes the top twenty thousand words in any given year and adds them into the vocabulary, if any are missing. As it runs, the vocabulary maintains a size of about 30,000 words, swapping a few thousand in and out as it goes.
 
-As a consequence, the vocabulary of the `eebo` matrix includes words that are among the 20,000 most frequent words in any given year, which are also used in every year thereafter. Each word has to have at least one year when it spikes, and it can't completely drop from the lexicon in any following year. These are the lexical survivors. Any word that isn't among the top 20,000 in any subsequent year gets tossed out. This creates a bit of a bias toward the later years, which should be kept in mind when interpreting results. This can cause problems when looking at documents from the earlier decades (1640s and 1650s), because archaic spellings are sometimes excluded from the model. Also an unusual word from the 1690s is more likely to be included than an unusual word from the 1640s.
+As a consequence, the vocabulary of the `eebo` matrix includes words that are among the 20,000 most frequent words in any given year, which are also used in every year thereafter. Each word has to have at least one year when it spikes, and it can't completely drop from the lexicon in any following year. Here are the requirements to be included:
+
+1. Each word must have at least one spike year when it's among the 20,000 most frequent
+2. Each word must be at least present (used at least once) in every year after its spike year.
+
+Every word that meets these two criteria makes the cut. These are the lexical survivors. These rules create a slight bias toward the later years, which should be kept in mind when interpreting results. In rare cases this can cause problems when looking at documents from the earlier decades (1640s and 1650s), because archaic spellings are sometimes excluded from the model, and unusual words from the 1690s are more likely to be included than unusual words from the 1640s.
 ```r
 keywords = c()
 vocab = c()
